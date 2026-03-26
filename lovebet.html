@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>per Betty</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&family=Playfair+Display:ital,wght@1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #03020a;
+    --neon-pink: #ff2d78;
+    --neon-cyan: #00f5d4;
+    --neon-yellow: #f5e642;
+    --dim-pink: rgba(255, 45, 120, 0.18);
+    --dim-cyan: rgba(0, 245, 212, 0.12);
+    --text: #f7e8f0;
+    --muted: rgba(255, 220, 240, 0.72);
+    --glow-pink: 0 0 8px #ff2d78, 0 0 24px rgba(255,45,120,0.4);
+    --glow-cyan: 0 0 8px #00f5d4, 0 0 24px rgba(0,245,212,0.4);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--black);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* Scanlines overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* Grid background */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,245,212,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,212,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Decorative neon flowers — CSS only */
+  .flower {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.15;
+  }
+
+  .flower svg { filter: drop-shadow(0 0 8px var(--neon-pink)); }
+  .flower.cyan svg { filter: drop-shadow(0 0 8px var(--neon-cyan)); }
+
+  .flower-tl  { top: 14%; left: 50%; transform: translateX(-50%) rotate(-20deg) scale(1.8); }
+  .flower-br  { top: 40%; right: -10px; transform: rotate(30deg) scale(0.9); }
+  .flower-mid { top: 47%; left: 55%; transform: rotate(15deg) scale(1.0); opacity: 0.13; }
+
+  @media (max-width: 480px) {
+    .flower-tl  { transform: translateX(-50%) rotate(-20deg) scale(1.3); }
+    .flower-br  { transform: rotate(30deg) scale(0.7); }
+    .flower-mid { left: 50%; transform: rotate(15deg) scale(0.8); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 80px 32px 120px;
+    overflow-x: clip;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 80px;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 0.2s;
+  }
+
+  .eyebrow {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--neon-cyan);
+    text-shadow: var(--glow-cyan);
+    margin-bottom: 24px;
+  }
+
+  .title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(64px, 17vw, 110px);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 0.9;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--neon-pink);
+    text-shadow: var(--glow-pink);
+    margin-top: 48px;
+    margin-bottom: 32px;
+    letter-spacing: -0.02em;
+    position: relative;
+  }
+
+  /* Glitch effect on title */
+  .title::before, .title::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0; right: 0;
+    color: transparent;
+  }
+  .title::before {
+    -webkit-text-stroke: 1.5px var(--neon-cyan);
+    animation: glitch1 4s infinite;
+    top: 0;
+  }
+  .title::after {
+    -webkit-text-stroke: 1.5px var(--neon-yellow);
+    animation: glitch2 4s infinite;
+    top: 0;
+  }
+
+  .divider {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--neon-pink), transparent);
+    box-shadow: var(--glow-pink);
+    margin: 0 auto 32px;
+  }
+
+  .intro {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 19px;
+    font-weight: 300;
+    font-style: italic;
+    color: #f2d4e8;
+    line-height: 1.9;
+    max-width: 480px;
+    margin: 0 auto;
+    letter-spacing: 0.01em;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  /* Tracks */
+  .tracks {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    margin-bottom: 80px;
+  }
+
+  .track-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .track-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--neon-cyan);
+    text-shadow: var(--glow-cyan);
+    letter-spacing: 0.1em;
+  }
+
+  .track-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-style: italic;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .track-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--neon-pink);
+    border: 1px solid rgba(255, 45, 120, 0.4);
+    padding: 3px 10px;
+    border-radius: 0;
+    margin-left: auto;
+    text-shadow: var(--glow-pink);
+    box-shadow: inset 0 0 8px rgba(255,45,120,0.08);
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+
+  /* Player */
+  .player {
+    background: linear-gradient(135deg, rgba(255,45,120,0.05), rgba(0,245,212,0.05));
+    border: 1px solid rgba(255, 45, 120, 0.25);
+    border-left: 2px solid var(--neon-pink);
+    padding: 24px 28px;
+    position: relative;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+
+  .player::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, var(--neon-pink), transparent);
+  }
+
+  .player-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .play-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 0;
+    background: transparent;
+    border: 1px solid var(--neon-pink);
+    box-shadow: var(--glow-pink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+  }
+
+  .play-btn:hover {
+    background: rgba(255,45,120,0.2);
+    box-shadow: var(--glow-pink), inset 0 0 16px rgba(255,45,120,0.15);
+  }
+
+  .play-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: var(--neon-pink);
+    filter: drop-shadow(0 0 4px var(--neon-pink));
+    margin-left: 2px;
+  }
+
+  .play-btn.playing { border-color: var(--neon-cyan); box-shadow: var(--glow-cyan); }
+  .play-btn.playing svg { fill: var(--neon-cyan); filter: drop-shadow(0 0 4px var(--neon-cyan)); }
+  .play-btn.playing svg.play-icon { display: none; }
+  .play-btn:not(.playing) svg.pause-icon { display: none; }
+
+  .progress-area { flex: 1; }
+
+  .progress-bar {
+    width: 100%;
+    height: 2px;
+    background: rgba(232, 224, 240, 0.1);
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    margin-top: -10px;
+    box-sizing: content-box;
+    touch-action: none;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--neon-pink), var(--neon-cyan));
+    box-shadow: 0 0 6px var(--neon-pink);
+    width: 0%;
+    transition: width 0.1s linear;
+    pointer-events: none;
+  }
+
+  .progress-handle {
+    width: 8px;
+    height: 8px;
+    background: var(--neon-cyan);
+    box-shadow: var(--glow-cyan);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .progress-bar:hover .progress-handle { opacity: 1; }
+
+  .time-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .time {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  audio { display: none; }
+
+  /* Lyrics section */
+  .lyrics-section {
+    margin-bottom: 80px;
+  }
+
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--neon-cyan);
+    text-shadow: var(--glow-cyan);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(0,245,212,0.3), transparent);
+  }
+
+  /* ── LYRICS CAROUSEL ── */
+  .carousel-wrapper { position: relative; }
+
+  .card-stack-outer {
+    position: relative;
+    height: 260px;
+    margin-bottom: 20px;
+  }
+  @media(max-width:480px){ .card-stack-outer { height: 300px; } }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(145deg, #0d0420 0%, #060115 100%);
+    border: 1px solid rgba(255,45,120,0.28);
+    border-left: 2px solid var(--neon-pink);
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 32px;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+    will-change: transform, opacity;
+    transform-origin: top center;
+  }
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, var(--neon-pink), transparent);
+  }
+  @media(max-width:480px){ .slide { padding: 22px 18px; } }
+
+  .slide-inner {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(15px, 2.4vw, 18px);
+    font-weight: 300;
+    line-height: 1.85;
+    color: #f0d6ea;
+    letter-spacing: 0.01em;
+    text-align: center;
+    word-break: break-word;
+  }
+  .slide-inner.chorus {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--text);
+  }
+
+  .slide-inner.sparse {
+    font-size: clamp(16px, 2.6vw, 20px);
+    line-height: 2.1;
+    letter-spacing: 0.02em;
+  }
+
+  .slide-inner.closing {
+    font-size: clamp(15px, 2.4vw, 18px);
+    line-height: 1.9;
+    color: var(--text);
+  }
+
+  .slide-inner .highlight {
+    color: var(--neon-pink);
+    text-shadow: 0 0 12px rgba(255,45,120,0.4);
+    font-style: italic;
+  }
+
+  .slide-inner .soft {
+    color: rgba(240, 214, 234, 0.5);
+    font-size: 0.85em;
+    letter-spacing: 0.08em;
+  }
+
+  /* Card number indicator */
+  .slide-counter {
+    position: absolute;
+    bottom: 12px;
+    right: 18px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: rgba(255,45,120,0.3);
+    letter-spacing: 0.15em;
+  }
+
+  .dots {
+    display: flex; gap: 8px; align-items: center; justify-content: center;
+    margin-top: 20px;
+  }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,45,120,0.25);
+    transition: all 0.3s cubic-bezier(.22,.8,.36,1);
+  }
+  .dot.active {
+    background: var(--neon-pink);
+    box-shadow: var(--glow-pink);
+    transform: scale(1.4);
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+  }
+
+  .footer-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, var(--neon-pink));
+    box-shadow: var(--glow-pink);
+    margin: 0 auto 24px;
+  }
+
+  .footer-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--neon-pink);
+    text-shadow: var(--glow-pink);
+    letter-spacing: 0.04em;
+  }
+
+  .footer-ps {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: rgba(232, 224, 240, 0.3);
+    margin-top: 12px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Cat */
+  .rose-accent {
+    position: fixed;
+    top: 32px;
+    right: 32px;
+    z-index: 10;
+    pointer-events: none;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px var(--neon-cyan));
+    opacity: 0.7;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes glitch1 {
+    0%, 95%, 100% { clip-path: inset(100% 0 0 0); transform: translateX(0); }
+    96% { clip-path: inset(20% 0 60% 0); transform: translateX(-3px); }
+    97% { clip-path: inset(60% 0 10% 0); transform: translateX(3px); }
+    98% { clip-path: inset(40% 0 40% 0); transform: translateX(-2px); }
+  }
+
+  @keyframes glitch2 {
+    0%, 92%, 100% { clip-path: inset(100% 0 0 0); transform: translateX(0); }
+    93% { clip-path: inset(10% 0 70% 0); transform: translateX(4px); }
+    94% { clip-path: inset(70% 0 5% 0); transform: translateX(-4px); }
+  }
+
+  /* Scroll reveal */
+  .reveal-hidden {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+    pointer-events: none;
+  }
+
+  .reveal-hidden.revealed {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  @media (max-width: 480px) {
+    .container { padding: 60px 20px 80px; }
+    .rose-accent { top: 16px; right: 16px; }
+  }
+  /* Password screen */
+  #gate {
+    position: fixed;
+    inset: 0;
+    background: var(--black);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 24px;
+    overflow: hidden;
+    transition: opacity 0.8s ease;
+  }
+
+  body.gate-active {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+
+  #gate.unlocking {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .gate-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--neon-pink);
+    text-shadow: var(--glow-pink);
+    margin-bottom: 48px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .gate-input-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 40px;
+    justify-content: center;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  .gate-digit {
+    width: 44px;
+    height: 56px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255,45,120,0.3);
+    color: var(--neon-pink);
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-style: italic;
+    text-align: center;
+    outline: none;
+    caret-color: var(--neon-pink);
+    transition: border-color 0.3s ease;
+  }
+
+  .gate-digit:focus {
+    border-bottom-color: var(--neon-pink);
+    text-shadow: var(--glow-pink);
+  }
+
+  .gate-digit.filled {
+    border-bottom-color: rgba(255,45,120,0.7);
+    text-shadow: var(--glow-pink);
+  }
+
+  .gate-error {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--neon-pink);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    margin-top: 8px;
+    text-shadow: var(--glow-pink);
+  }
+
+  .gate-error.visible { opacity: 1; }
+
+  .gate-input-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 40px;
+    justify-content: center;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  .gate-hint {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: rgba(255, 220, 240, 0.35);
+    margin-top: 56px;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  .gate-label .letter,
+  .gate-hint .letter {
+    display: inline-block;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .gate-label .letter.visible,
+  .gate-hint .letter.visible {
+    opacity: 1;
+  }
+
+  /* Flicker only after chars have appeared */
+  .gate-label.glitch-active {
+    animation: labelFlicker 6s infinite;
+  }
+
+  @keyframes labelFlicker {
+    0%, 88%, 100%  { opacity: 1; text-shadow: var(--glow-pink); }
+    89%            { opacity: 0.4; text-shadow: none; }
+    90%            { opacity: 1; text-shadow: var(--glow-pink); }
+    91%            { opacity: 0.2; text-shadow: none; }
+    92%            { opacity: 1; text-shadow: 0 0 16px #ff2d78, 0 0 40px rgba(255,45,120,0.8); }
+    93%            { opacity: 0.8; }
+    94%            { opacity: 1; text-shadow: var(--glow-pink); }
+    95%            { transform: translateX(-3px); filter: hue-rotate(40deg); }
+    96%            { transform: translateX(3px); filter: hue-rotate(-40deg); }
+    97%            { transform: translateX(0); filter: none; opacity: 0.5; }
+    98%            { opacity: 1; text-shadow: var(--glow-pink); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Password gate -->
+<div id="gate">
+  <p class="gate-label" id="gate-label"></p>
+  <div class="gate-input-row">
+    <input class="gate-digit" id="d1" type="text" inputmode="numeric" maxlength="1" autocomplete="off"/>
+    <input class="gate-digit" id="d2" type="text" inputmode="numeric" maxlength="1" autocomplete="off"/>
+    <input class="gate-digit" id="d3" type="text" inputmode="numeric" maxlength="1" autocomplete="off"/>
+    <input class="gate-digit" id="d4" type="text" inputmode="numeric" maxlength="1" autocomplete="off"/>
+  </div>
+  <p class="gate-error" id="gate-error">riprova</p>
+  <p class="gate-hint" id="gate-hint"></p>
+</div>
+
+<div class="rose-accent">
+  <svg width="52" height="52" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+    <!-- Ears - pointed, all black -->
+    <polygon points="7,22 12,5 19,20" fill="#111"/>
+    <polygon points="33,20 40,5 45,22" fill="#111"/>
+    <!-- Head - big round, all black -->
+    <ellipse cx="26" cy="30" rx="20" ry="18" fill="#111"/>
+    <!-- White muzzle patch - only center lower face -->
+    <ellipse cx="26" cy="36" rx="9" ry="7" fill="#f0ece0"/>
+    <!-- Eyes - big round, amber/golden -->
+    <ellipse cx="19" cy="27" rx="5" ry="5.5" fill="#c8a84b"/>
+    <ellipse cx="33" cy="27" rx="5" ry="5.5" fill="#c8a84b"/>
+    <!-- Pupils - large and round -->
+    <ellipse cx="19" cy="27.5" rx="3.5" ry="4.5" fill="#0a0a0a"/>
+    <ellipse cx="33" cy="27.5" rx="3.5" ry="4.5" fill="#0a0a0a"/>
+    <!-- Eye shine -->
+    <circle cx="20.5" cy="25.5" r="1.2" fill="white" opacity="0.9"/>
+    <circle cx="34.5" cy="25.5" r="1.2" fill="white" opacity="0.9"/>
+    <!-- Nose - small pink -->
+    <ellipse cx="26" cy="34" rx="2" ry="1.4" fill="#e8a0a0"/>
+    <!-- Mouth -->
+    <path d="M26,35.4 Q23,37.5 21.5,36.5" stroke="#555" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+    <path d="M26,35.4 Q29,37.5 30.5,36.5" stroke="#555" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+    <!-- Long whiskers - characteristic -->
+    <line x1="2" y1="32" x2="18" y2="34" stroke="white" stroke-width="0.8" opacity="0.85"/>
+    <line x1="2" y1="34.5" x2="18" y2="35.5" stroke="white" stroke-width="0.8" opacity="0.85"/>
+    <line x1="2" y1="37" x2="18" y2="36.5" stroke="white" stroke-width="0.8" opacity="0.7"/>
+    <line x1="34" y1="34" x2="50" y2="32" stroke="white" stroke-width="0.8" opacity="0.85"/>
+    <line x1="34" y1="35.5" x2="50" y2="34.5" stroke="white" stroke-width="0.8" opacity="0.85"/>
+    <line x1="34" y1="36.5" x2="50" y2="37" stroke="white" stroke-width="0.8" opacity="0.7"/>
+  </svg>
+</div>
+
+<div class="container">
+
+  <!-- Decorative neon flowers — inside container, absolute positioned -->
+  <!-- BARDANA — top, neon pink -->
+  <div class="flower flower-tl">
+  <svg width="220" height="260" viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ff2d78" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M110 260 C108 200 106 160 110 120"/>
+    <path d="M110 200 C80 185 40 190 20 170 C50 165 80 172 110 185"/>
+    <path d="M110 190 C140 175 180 180 200 158 C170 155 140 162 110 178"/>
+    <path d="M110 160 C85 145 55 148 38 130 C62 128 88 136 110 150"/>
+    <path d="M110 200 C90 190 60 188 40 182" stroke-width="0.6" opacity="0.5"/>
+    <path d="M110 190 C130 182 158 180 178 172" stroke-width="0.6" opacity="0.5"/>
+    <circle cx="110" cy="100" r="18"/><circle cx="110" cy="100" r="12"/>
+    <line x1="110" y1="82" x2="110" y2="74"/><line x1="118" y1="84" x2="123" y2="77"/>
+    <line x1="124" y1="91" x2="131" y2="88"/><line x1="126" y1="100" x2="134" y2="100"/>
+    <line x1="124" y1="109" x2="131" y2="113"/><line x1="118" y1="116" x2="123" y2="123"/>
+    <line x1="110" y1="118" x2="110" y2="126"/><line x1="102" y1="116" x2="97" y2="123"/>
+    <line x1="96" y1="109" x2="89" y2="113"/><line x1="94" y1="100" x2="86" y2="100"/>
+    <line x1="96" y1="91" x2="89" y2="88"/><line x1="102" y1="84" x2="97" y2="77"/>
+    <circle cx="88" cy="78" r="13"/><circle cx="88" cy="78" r="8"/>
+    <line x1="88" y1="65" x2="88" y2="59"/><line x1="97" y1="67" x2="101" y2="62"/>
+    <line x1="101" y1="75" x2="106" y2="73"/><line x1="101" y1="82" x2="106" y2="85"/>
+    <line x1="95" y1="88" x2="98" y2="93"/><line x1="88" y1="91" x2="88" y2="97"/>
+    <line x1="81" y1="88" x2="78" y2="93"/><line x1="75" y1="82" x2="70" y2="85"/>
+    <line x1="75" y1="75" x2="70" y2="73"/><line x1="79" y1="67" x2="75" y2="62"/>
+  </svg>
+  </div>
+
+  <!-- GIGLIO — middle, neon yellow -->
+  <div class="flower flower-mid">
+  <svg width="180" height="280" viewBox="0 0 180 280" fill="none" stroke="#f5e642" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+    <path d="M90 280 C90 240 88 200 90 155"/>
+    <path d="M90 240 C70 228 52 215 44 196 C62 200 78 214 90 240"/>
+    <path d="M90 220 C112 208 130 195 136 175 C118 180 102 194 90 220"/>
+    <path d="M90 190 C72 180 58 166 54 148 C68 152 82 166 90 190"/>
+    <path d="M90 240 C74 230 58 220 48 208" stroke-width="0.6" opacity="0.5"/>
+    <path d="M90 220 C106 212 122 202 132 190" stroke-width="0.6" opacity="0.5"/>
+    <path d="M90 155 C78 140 68 118 72 95 C80 108 86 132 90 155"/>
+    <path d="M90 155 C102 140 112 118 108 95 C100 108 94 132 90 155"/>
+    <path d="M90 155 C72 148 52 150 40 138 C54 132 74 138 90 155"/>
+    <path d="M90 155 C108 148 128 150 140 138 C126 132 106 138 90 155"/>
+    <path d="M90 155 C76 164 62 176 64 196 C74 186 84 170 90 155"/>
+    <path d="M90 155 C104 164 118 176 116 196 C106 186 96 170 90 155"/>
+    <line x1="90" y1="148" x2="82" y2="128"/><line x1="90" y1="148" x2="88" y2="126"/>
+    <line x1="90" y1="148" x2="90" y2="125"/><line x1="90" y1="148" x2="92" y2="126"/>
+    <line x1="90" y1="148" x2="98" y2="128"/>
+    <ellipse cx="82" cy="126" rx="3" ry="1.5" transform="rotate(-20 82 126)" fill="#f5e642" stroke="none"/>
+    <ellipse cx="88" cy="124" rx="3" ry="1.5" transform="rotate(-5 88 124)" fill="#f5e642" stroke="none"/>
+    <ellipse cx="90" cy="123" rx="3" ry="1.5" fill="#f5e642" stroke="none"/>
+    <ellipse cx="92" cy="124" rx="3" ry="1.5" transform="rotate(5 92 124)" fill="#f5e642" stroke="none"/>
+    <ellipse cx="98" cy="126" rx="3" ry="1.5" transform="rotate(20 98 126)" fill="#f5e642" stroke="none"/>
+    <circle cx="80" cy="142" r="1.2" fill="#f5e642" stroke="none" opacity="0.7"/>
+    <circle cx="76" cy="148" r="1" fill="#f5e642" stroke="none" opacity="0.7"/>
+    <circle cx="100" cy="142" r="1.2" fill="#f5e642" stroke="none" opacity="0.7"/>
+    <circle cx="104" cy="148" r="1" fill="#f5e642" stroke="none" opacity="0.7"/>
+  </svg>
+  </div>
+
+  <!-- MAGNOLIA — bottom, neon cyan -->
+  <div class="flower flower-br cyan">
+  <svg width="260" height="300" viewBox="0 0 260 300" fill="none" stroke="#00f5d4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 300 C40 260 60 220 90 180 C110 155 130 140 130 120"/>
+    <path d="M90 180 C110 175 130 165 155 150"/>
+    <path d="M110 210 C125 200 145 195 165 185"/>
+    <path d="M130 120 C118 105 112 85 118 65 C124 75 128 95 130 120"/>
+    <path d="M130 120 C142 105 148 85 142 65 C136 75 132 95 130 120"/>
+    <path d="M130 120 C112 112 92 112 78 100 C90 94 112 100 130 120"/>
+    <path d="M130 120 C148 112 168 112 182 100 C170 94 148 100 130 120"/>
+    <path d="M130 120 C115 130 108 148 114 165 C122 155 128 138 130 120"/>
+    <path d="M130 120 C145 130 152 148 146 165 C138 155 132 138 130 120"/>
+    <line x1="130" y1="120" x2="127" y2="110"/><line x1="130" y1="120" x2="130" y2="108"/>
+    <line x1="130" y1="120" x2="133" y2="110"/>
+    <circle cx="127" cy="109" r="1.5" fill="#00f5d4"/><circle cx="130" cy="107" r="1.5" fill="#00f5d4"/><circle cx="133" cy="109" r="1.5" fill="#00f5d4"/>
+    <path d="M155 150 C145 138 140 120 146 104 C151 113 154 132 155 150"/>
+    <path d="M155 150 C165 138 170 120 164 104 C159 113 156 132 155 150"/>
+    <path d="M155 150 C140 144 124 146 114 136 C124 130 142 136 155 150"/>
+    <path d="M155 150 C170 144 186 146 196 136 C186 130 168 136 155 150"/>
+    <path d="M165 185 C160 177 158 165 162 155 C165 161 166 173 165 185"/>
+    <path d="M165 185 C170 177 172 165 168 155 C165 161 164 173 165 185"/>
+    <path d="M90 180 C82 165 84 145 96 135 C96 148 92 165 90 180"/>
+    <path d="M90 180 C100 168 104 150 98 138 C95 150 92 165 90 180"/>
+  </svg>
+  </div>
+
+  <header class="header">
+    <p class="eyebrow">A BETTY</p>
+    <div class="divider"></div>
+    <p class="intro" id="dedica">Avevo pensato di farti questa sorpresa se tu avessi deciso di tornare a casa nostra, ma in questi lunghi giorni senza di te ho cambiato idea. Ho sentito la necessità di imprimere la mia anima, le mie emozioni in parole e musica. Recentemente ho imparato che la cosa più potente al mondo non è il denaro, un sogno, l'amore, ma una storia. E vorrei raccontarti una storia che parla di noi, e di una scommessa. La mia...</p>
+  </header>
+
+  <!-- scroll trigger sentinel -->
+  <div id="scroll-trigger" style="height:1px; margin-top: 40px;"></div>
+
+  <div id="reveal-content" class="reveal-hidden">
+    <h1 class="title" data-text="LoveBet" style="text-align:center; margin-bottom: 48px;">LoveBet</h1>
+
+  <section class="tracks">
+
+    <!-- Track 1 -->
+    <div class="track">
+      <div class="track-header">
+        <span class="track-num">01</span>
+        <span class="track-title">LoveBet</span>
+        <span class="track-tag">LATO A</span>
+      </div>
+      <div class="player" id="player1">
+        <audio id="audio1" src="lovebet-a.mp3"></audio>
+        <div class="player-controls">
+          <button class="play-btn" onclick="togglePlay(1)" aria-label="Play">
+            <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            <svg class="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          </button>
+          <div class="progress-area">
+            <div class="progress-bar" id="bar1">
+              <div class="progress-fill" id="fill1"></div>
+              <div class="progress-handle" id="handle1"></div>
+            </div>
+            <div class="time-row">
+              <span class="time" id="cur1">0:00</span>
+              <span class="time" id="dur1">—:——</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Track 2 -->
+    <div class="track">
+      <div class="track-header">
+        <span class="track-num">02</span>
+        <span class="track-title">LoveBet</span>
+        <span class="track-tag">LATO B</span>
+      </div>
+      <div class="player" id="player2">
+        <audio id="audio2" src="lovebet-b.mp3"></audio>
+        <div class="player-controls">
+          <button class="play-btn" onclick="togglePlay(2)" aria-label="Play">
+            <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            <svg class="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          </button>
+          <div class="progress-area">
+            <div class="progress-bar" id="bar2">
+              <div class="progress-fill" id="fill2"></div>
+              <div class="progress-handle" id="handle2"></div>
+            </div>
+            <div class="time-row">
+              <span class="time" id="cur2">0:00</span>
+              <span class="time" id="dur2">—:——</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Lyrics -->
+  <section class="lyrics-section">
+    <p class="section-label">Lyrics</p>
+
+    <div class="carousel-wrapper">
+      <div class="card-stack-outer" id="cardStack">
+
+        <div class="slide">
+          <div class="slide-inner">
+            I still see the river when I close my eyes<br>
+            laughing at nothing, hair still wet from the water<br>
+            the afternoon bent like it had nowhere else to be<br>
+            even the light followed you around
+          </div>
+          <span class="slide-counter">01 / 10</span>
+        </div>
+
+        <div class="slide">
+          <div class="slide-inner">
+            You'd just show up, no warning, no reason given —<br>
+            didn't ask, you always knew before I did.<br>
+            There were things I kept meaning to say out loud.<br>
+            <span class="soft">Most of them got lost on the way out.</span>
+          </div>
+          <span class="slide-counter">02 / 10</span>
+        </div>
+
+        <div class="slide">
+          <div class="slide-inner sparse">
+            I keep turning it over in the dark,<br>
+            trying to find the crack where I lost you<br>
+            or where you lost me.<br>
+            <span class="soft">I'm not even sure anymore.</span>
+          </div>
+          <span class="slide-counter">03 / 10</span>
+        </div>
+
+        <div class="slide">
+          <div class="slide-inner chorus">
+            But I'm not ready to call this what it is.<br>
+            I've seen how you fight the things that tried to break you<br>
+            and I know I got heavy, I know I pulled the sky down —<br>
+            but I'm still here.<br>
+            <span class="highlight">Still trying to be worth the sun you carry.</span>
+          </div>
+          <span class="slide-counter">04 / 10</span>
+        </div>
+
+        <div class="slide">
+          <div class="slide-inner">
+            Every time you walked in I forgot what was heavy.<br>
+            The way you moved like the room was already yours,<br>
+            that slow smile before you even reached me —<br>
+            I've been living in that moment ever since.
+          </div>
+          <span class="slide-counter">05 / 10</span>
+        </div>
+
+        <div class="slide">
+          <div class="slide-inner">
+            You were never the kind to stay where it hurts.<br>
+            You took everything life threw and wore it like proof.<br>
+            I'm scared I'm the one thing you'll not figure out,<br>
+            <span class="soft">and that's the knot I can't think my way out.</span>
+          </div>
+          <span class="slide-counter">06 / 10</span>
+        </div>
+
+        <div class="slide">
+          <div class="slide-inner sparse">
+            Some nights I hear it, loud and ugly —<br>
+            you're losing your light<br>
+            because of a dark you can't even name.<br>
+            <span class="soft">And I hate that it's not wrong.</span>
+          </div>
+          <span class="slide-counter">07 / 10</span>
+        </div>
+
+        <div class="slide">
+          <div class="slide-inner chorus">
+            I'm not ready to call this what it is.<br>
+            I've seen how you fight the things that tried to break you<br>
+            and I know I got heavy, I know I pulled the sky down —<br>
+            but I'm still here.<br>
+            <span class="highlight">Still trying to be worth the sun you carry.</span>
+          </div>
+          <span class="slide-counter">08 / 10</span>
+        </div>
+
+        <div class="slide">
+          <div class="slide-inner">
+            I never needed you to fix me.<br>
+            I just wanted to be the place you felt safe coming home to.<br>
+            I still think I can be that.<br>
+            <span class="highlight">I guess that's the only bet worth making.</span>
+          </div>
+          <span class="slide-counter">09 / 10</span>
+        </div>
+
+        <div class="slide">
+          <div class="slide-inner closing">
+            I still see our couch when the night gets quiet —<br>
+            you after dinner, not saying much,<br>
+            something small curled up and breathing on you.<br>
+            Even the little ones knew where home was.<br><br>
+            <span class="highlight">That's what I know.<br>
+            That's what I'm not letting go.</span>
+          </div>
+          <span class="slide-counter">10 / 10</span>
+        </div>
+
+      </div><!-- card-stack-outer -->
+      <div class="dots" id="dotsC"></div>
+    </div>
+
+  </section>
+
+  <footer class="footer">
+    <div class="footer-line"></div>
+    <p class="footer-text">I hope you'll be my Valentine forever!</p>
+    <p class="footer-ps">ps: avrei voluto anche suonarla ma si andava per le lunghe :x</p>
+    <p class="eyebrow" style="margin-top: 40px;">DA MATTIA</p>
+  </footer>
+
+  </div><!-- end reveal-content -->
+
+</div>
+
+<script>
+  // Animate gate label numbers in random order, then start glitch
+  const labelEl = document.getElementById('gate-label');
+  const labelText = '10 · 13 · 20 · 5 · 2 · 5 · 18';
+  const labelChars = labelText.split('').map(char => {
+    const span = document.createElement('span');
+    span.className = 'letter';
+    span.textContent = char === ' ' ? '\u00A0' : char;
+    labelEl.appendChild(span);
+    return span;
+  });
+
+  const labelIndices = labelChars.map((_, i) => i);
+  for (let i = labelIndices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [labelIndices[i], labelIndices[j]] = [labelIndices[j], labelIndices[i]];
+  }
+
+  const totalDelay = labelChars.length * 110 + 400;
+  labelIndices.forEach((charIdx, order) => {
+    setTimeout(() => {
+      labelChars[charIdx].classList.add('visible');
+    }, 400 + order * 110);
+  });
+
+  // Start glitch animation only after all chars are visible
+  setTimeout(() => {
+    labelEl.classList.add('glitch-active');
+    // Fade in password inputs and hint
+    document.querySelector('.gate-input-row').style.opacity = '1';
+    document.getElementById('gate-hint').style.opacity = '1';
+    setTimeout(() => digits[0].focus(), 400);
+  }, totalDelay + 200);
+
+  // Static hint — no animation
+  document.getElementById('gate-hint').textContent = 'when it all began...';
+
+  // Lock scroll while gate is active
+  document.body.classList.add('gate-active');
+
+  // Password gate
+  const PASSWORD = '3110';
+  const gate = document.getElementById('gate');
+  const digits = [
+    document.getElementById('d1'),
+    document.getElementById('d2'),
+    document.getElementById('d3'),
+    document.getElementById('d4')
+  ];
+  const errorEl = document.getElementById('gate-error');
+
+  digits.forEach((input, i) => {
+    input.addEventListener('input', (e) => {
+      const val = e.target.value.replace(/\D/g, '');
+      input.value = val ? val[val.length - 1] : '';
+      if (input.value) {
+        input.classList.add('filled');
+        if (i < 3) digits[i + 1].focus();
+        else checkPassword();
+      } else {
+        input.classList.remove('filled');
+      }
+      errorEl.classList.remove('visible');
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !input.value && i > 0) {
+        digits[i - 1].value = '';
+        digits[i - 1].classList.remove('filled');
+        digits[i - 1].focus();
+      }
+    });
+  });
+
+  function checkPassword() {
+    const entered = digits.map(d => d.value).join('');
+    if (entered === PASSWORD) {
+      gate.classList.add('unlocking');
+      setTimeout(() => {
+        gate.style.display = 'none';
+        document.body.classList.remove('gate-active');
+        window.scrollTo(0, 0);
+        startScrollReveal();
+      }, 800);
+    } else {
+      errorEl.classList.add('visible');
+      digits.forEach(d => { d.value = ''; d.classList.remove('filled'); });
+      setTimeout(() => digits[0].focus(), 100);
+    }
+  }
+
+  // Scroll reveal — triggers only when user actually scrolls
+  const trigger = document.getElementById('scroll-trigger');
+  const revealContent = document.getElementById('reveal-content');
+
+  function startScrollReveal() {
+    function onScroll() {
+      const triggerTop = trigger.getBoundingClientRect().top;
+      if (triggerTop < window.innerHeight) {
+        revealContent.classList.add('revealed');
+        window.removeEventListener('scroll', onScroll);
+        // Autoplay LATO A
+        const audio1 = audios[1];
+        const btn1 = document.querySelector('#player1 .play-btn');
+        audio1.currentTime = 0;
+        audio1.play().then(() => {
+          btn1.classList.add('playing');
+          current = 1;
+        }).catch(() => {}); // ignore autoplay block
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  // Audio players
+  const audios = { 1: document.getElementById('audio1'), 2: document.getElementById('audio2') };
+  let current = null;
+
+  function fmt(s) {
+    if (isNaN(s)) return '—:——';
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60).toString().padStart(2, '0');
+    return `${m}:${sec}`;
+  }
+
+  function togglePlay(n) {
+    const audio = audios[n];
+    const btn = document.querySelector(`#player${n} .play-btn`);
+
+    if (current && current !== n) {
+      audios[current].pause();
+      document.querySelector(`#player${current} .play-btn`).classList.remove('playing');
+    }
+
+    if (audio.paused) {
+      audio.play();
+      btn.classList.add('playing');
+      current = n;
+    } else {
+      audio.pause();
+      btn.classList.remove('playing');
+      current = null;
+    }
+  }
+
+  // Progress bar drag support
+  [1, 2].forEach(n => {
+    const bar   = document.getElementById(`bar${n}`);
+    const audio = audios[n];
+    let seeking = false;
+
+    function seekTo(clientX) {
+      const rect  = bar.getBoundingClientRect();
+      const ratio = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
+      if (audio.duration) audio.currentTime = ratio * audio.duration;
+    }
+
+    bar.addEventListener('pointerdown', e => {
+      seeking = true;
+      bar.setPointerCapture(e.pointerId);
+      bar.style.cursor = 'grabbing';
+      document.getElementById(`handle${n}`).style.opacity = '1';
+      seekTo(e.clientX);
+    });
+    bar.addEventListener('pointermove', e => {
+      if (!seeking) return;
+      seekTo(e.clientX);
+    });
+    bar.addEventListener('pointerup', e => {
+      if (!seeking) return;
+      seeking = false;
+      bar.style.cursor = '';
+      document.getElementById(`handle${n}`).style.opacity = '';
+      seekTo(e.clientX);
+    });
+    bar.addEventListener('pointercancel', () => {
+      seeking = false;
+      bar.style.cursor = '';
+      document.getElementById(`handle${n}`).style.opacity = '';
+    });
+  });
+
+  [1, 2].forEach(n => {
+    const audio = audios[n];
+    audio.addEventListener('timeupdate', () => {
+      const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+      document.getElementById(`fill${n}`).style.width = pct + '%';
+      document.getElementById(`handle${n}`).style.left = pct + '%';
+      document.getElementById(`cur${n}`).textContent = fmt(audio.currentTime);
+    });
+    audio.addEventListener('loadedmetadata', () => {
+      document.getElementById(`dur${n}`).textContent = fmt(audio.duration);
+    });
+    audio.addEventListener('ended', () => {
+      document.querySelector(`#player${n} .play-btn`).classList.remove('playing');
+      current = null;
+      // Reset progress bar to start
+      document.getElementById(`fill${n}`).style.width = '0%';
+      document.getElementById(`handle${n}`).style.left = '0%';
+      document.getElementById(`cur${n}`).textContent = '0:00';
+      // Autoplay the other track
+      const next = n === 1 ? 2 : 1;
+      const nextAudio = audios[next];
+      const nextBtn = document.querySelector(`#player${next} .play-btn`);
+      nextAudio.currentTime = 0;
+      nextAudio.play();
+      nextBtn.classList.add('playing');
+      current = next;
+    });
+  });
+
+  // ── LYRICS CAROUSEL ──
+  const cardStack = document.getElementById('cardStack');
+  const dotsC     = document.getElementById('dotsC');
+  const slides    = Array.from(cardStack.querySelectorAll('.slide'));
+  const total     = slides.length;
+  let cur = 0;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    dotsC.appendChild(d);
+  });
+
+  function updateDots() {
+    dotsC.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+  }
+
+  const SPRING   = 'cubic-bezier(0.25, 0.85, 0.35, 1.0)';
+  const SNAP_OUT = 'cubic-bezier(0.32, 0, 0.6, 1)';
+
+  function setCardState(slide, offset, instant) {
+    slide.style.transition = instant ? 'none'
+      : 'transform 0.42s cubic-bezier(.22,.8,.36,1), opacity 0.35s';
+    if (offset === 0) {
+      slide.style.zIndex        = String(total + 5);
+      slide.style.transform     = 'translateY(0) scale(1)';
+      slide.style.opacity       = '1';
+      slide.style.pointerEvents = 'auto';
+    } else if (offset === 1) {
+      slide.style.zIndex        = String(total + 4);
+      slide.style.transform     = 'translateY(8px) scale(0.97)';
+      slide.style.opacity       = '1';
+      slide.style.pointerEvents = 'none';
+    } else if (offset === 2) {
+      slide.style.zIndex        = String(total + 3);
+      slide.style.transform     = 'translateY(14px) scale(0.94)';
+      slide.style.opacity       = '0.6';
+      slide.style.pointerEvents = 'none';
+    } else if (offset < 0) {
+      slide.style.zIndex        = '1';
+      slide.style.transform     = 'translateX(-115%) rotate(-8deg)';
+      slide.style.opacity       = '0';
+      slide.style.pointerEvents = 'none';
+    } else {
+      slide.style.zIndex        = String(total + 2);
+      slide.style.transform     = 'translateY(18px) scale(0.91)';
+      slide.style.opacity       = '0';
+      slide.style.pointerEvents = 'none';
+    }
+  }
+
+  function updateStack(instant = false) {
+    slides.forEach((s, i) => setCardState(s, i - cur, instant));
+    updateDots();
+  }
+
+  function goTo(idx) {
+    if (idx < 0 || idx >= total) return;
+    cur = idx;
+    updateStack();
+  }
+
+  let isDragging = false, startX = 0, startY = 0, isHoriz = null;
+
+  cardStack.addEventListener('pointerdown', e => {
+    if (e.target.closest('button')) return;
+    startX = e.clientX; startY = e.clientY;
+    isDragging = true; isHoriz = null;
+    cardStack._capturedId = e.pointerId;
+    cardStack.setPointerCapture(e.pointerId);
+    slides[cur].style.cursor = 'grabbing';
+  });
+
+  cardStack.addEventListener('pointermove', e => {
+    if (!isDragging) return;
+    const dx = e.clientX - startX, dy = e.clientY - startY;
+    if (isHoriz === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+      isHoriz = Math.abs(dx) > Math.abs(dy);
+      if (!isHoriz) {
+        try { cardStack.releasePointerCapture(cardStack._capturedId); } catch(_) {}
+        isDragging = false;
+        slides[cur].style.cursor = '';
+        return;
+      }
+    }
+    if (!isHoriz) return;
+    const topCard = slides[cur];
+    topCard.style.transition = 'none';
+    topCard.style.transform  = `translateX(${dx}px) translateY(0) rotate(${dx * 0.04}deg) scale(1)`;
+    const progress = Math.min(Math.abs(dx) / 200, 1);
+    if (dx < 0 && slides[cur + 1]) {
+      const nxt = slides[cur + 1];
+      nxt.style.transition = 'none';
+      nxt.style.transform  = `translateY(${8 - progress * 8}px) scale(${0.97 + progress * 0.03})`;
+      nxt.style.opacity    = String(0.6 + progress * 0.4);
+    } else if (dx > 0 && slides[cur - 1]) {
+      const prv = slides[cur - 1];
+      prv.style.transition = 'none';
+      prv.style.transform  = `translateX(${-115 + progress * 115}%) rotate(${-8 + progress * 8}deg)`;
+      prv.style.opacity    = String(progress);
+      prv.style.zIndex     = String(total + 6);
+    }
+  });
+
+  cardStack.addEventListener('pointerup',     e => finishDrag(e.clientX));
+  cardStack.addEventListener('pointercancel', () => snapBack());
+
+  function finishDrag(endX) {
+    if (!isDragging) return;
+    isDragging = false;
+    slides[cur].style.cursor = '';
+    const dx = endX - startX;
+    if (isHoriz && Math.abs(dx) > 70) {
+      const dir = dx < 0 ? 1 : -1, nextIdx = cur + dir;
+      if (nextIdx >= 0 && nextIdx < total) {
+        const top = slides[cur];
+        top.style.transition = 'transform 0.32s cubic-bezier(.4,0,.6,1), opacity 0.32s';
+        top.style.transform  = dx < 0
+          ? 'translateX(-125%) rotate(-13deg) scale(0.9)'
+          : 'translateX(125%) rotate(13deg) scale(0.9)';
+        top.style.opacity = '0';
+        setTimeout(() => {
+          cur = nextIdx;
+          updateStack(true);
+          requestAnimationFrame(() => requestAnimationFrame(() =>
+            slides.forEach(s => { if (!s.style.transition.includes('none')) return; s.style.transition = ''; })
+          ));
+        }, 32);
+      } else snapBack();
+    } else snapBack();
+    isHoriz = null;
+  }
+
+  function snapBack() {
+    const top = slides[cur];
+    top.style.transition = 'transform 0.42s cubic-bezier(.34,1.56,.64,1), opacity 0.3s';
+    top.style.transform  = 'translateX(0) translateY(0) rotate(0deg) scale(1)';
+    if (slides[cur + 1]) {
+      slides[cur + 1].style.transition = 'transform 0.42s cubic-bezier(.22,.8,.36,1), opacity 0.3s';
+      slides[cur + 1].style.transform  = 'translateY(8px) scale(0.97)';
+      slides[cur + 1].style.opacity    = '1';
+    }
+    if (slides[cur - 1]) {
+      slides[cur - 1].style.transition = 'transform 0.42s cubic-bezier(.22,.8,.36,1), opacity 0.3s';
+      slides[cur - 1].style.transform  = 'translateX(-115%) rotate(-8deg)';
+      slides[cur - 1].style.opacity    = '0';
+      slides[cur - 1].style.zIndex     = '1';
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') goTo(cur + 1);
+    if (e.key === 'ArrowLeft')  goTo(cur - 1);
+  });
+
+  window.addEventListener('load',   () => updateStack(true));
+  window.addEventListener('resize', () => updateStack(true));
+
+</script>
+</body>
+</html>
