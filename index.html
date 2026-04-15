@@ -53,8 +53,8 @@
 
   /* VIEWPORT / 4 PAGES */
   #viewport { position:fixed; inset:0; overflow:hidden; z-index:1; }
-  #pages-wrapper { position:absolute; top:0; left:0; width:100%; height:400%; transform:translateY(0); transition:transform 0.65s cubic-bezier(.22,.8,.36,1); will-change:transform; }
-  .page { position:relative; width:100%; height:25%; overflow:hidden; }
+  #pages-wrapper { position:absolute; top:0; left:0; width:100%; height:500%; transform:translateY(0); transition:transform 0.65s cubic-bezier(.22,.8,.36,1); will-change:transform; }
+  .page { position:relative; width:100%; height:20%; overflow:hidden; }
   #page1 { overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; scrollbar-width:none; overscroll-behavior-y:contain; }
   #page1::-webkit-scrollbar { display:none; }
 
@@ -150,7 +150,7 @@
   .track-num { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--neon-cyan); text-shadow:var(--glow-cyan); letter-spacing:0.1em; }
   .track-title { font-family:'Playfair Display',serif; font-size:clamp(20px,4.5vw,26px); font-style:italic; color:var(--text); letter-spacing:-0.01em; }
 
-  .diamond-wrap { display:flex; align-items:center; margin-left:auto; transform:translateY(2px); }
+  .diamond-wrap { display:flex; gap:6px; align-items:center; margin-left:auto; transform:translateY(2px); }
   .diamond-symbol { width:26px; height:26px; display:flex; align-items:center; justify-content:center; --dm-color:rgba(255,45,120,0.5); --dm-glow:rgba(255,45,120,0.25); }
   .diamond-symbol svg { width:100%; height:100%; transition:filter 0.3s ease; filter:drop-shadow(0 0 4px var(--dm-glow)); }
   .diamond-symbol svg .dm-facet { fill:none; stroke:var(--dm-color); stroke-width:1.2; transition:stroke 0.3s ease,fill 0.3s ease; }
@@ -158,6 +158,18 @@
   .diamond-symbol.flash svg { filter:drop-shadow(0 0 8px var(--dm-glow)) drop-shadow(0 0 20px var(--dm-glow)); }
   .diamond-symbol.flash svg .dm-facet { stroke-width:1.5; }
   .diamond-symbol.flash svg .dm-top { opacity:0.3; }
+
+  .swirl-wrap { display:flex; gap:6px; align-items:center; margin-left:auto; transform:translateY(2px); }
+  .swirl-symbol.flipped svg { transform:rotate(180deg); }
+  .swirl-symbol { width:26px; height:26px; display:flex; align-items:center; justify-content:center; --sw-color:rgba(255,45,120,0.55); --sw-glow:rgba(255,45,120,0.3); }
+  .swirl-symbol svg { width:100%; height:100%; transition:filter 0.5s ease; filter:drop-shadow(0 0 4px var(--sw-glow)); }
+  .swirl-symbol svg .sw-facet { fill:none; stroke:var(--sw-color); stroke-width:1.2; stroke-linecap:round; stroke-linejoin:round; transition:stroke 0.3s ease; }
+  .swirl-symbol svg .sw-body { fill:var(--sw-color); opacity:0.1; stroke:var(--sw-color); stroke-width:1.2; transition:fill 0.3s ease,opacity 0.3s ease; }
+  .swirl-symbol svg .sw-spot { fill:var(--sw-color); opacity:0.55; transition:fill 0.3s ease,opacity 0.3s ease; }
+  .swirl-symbol.flash svg { filter:drop-shadow(0 0 8px var(--sw-glow)) drop-shadow(0 0 20px var(--sw-glow)); }
+  .swirl-symbol.flash svg .sw-facet { stroke-width:1.6; }
+  .swirl-symbol.flash svg .sw-body { opacity:0.3; }
+  .swirl-symbol.flash svg .sw-spot { opacity:0.95; }
 
   .dice-wrap { display:flex; gap:6px; align-items:center; margin-left:auto; }
   .die { width:26px; height:26px; border:1px solid rgba(255,45,120,0.5); box-shadow:0 0 6px rgba(255,45,120,0.3),inset 0 0 6px rgba(255,45,120,0.05); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono',monospace; font-size:13px; color:var(--neon-pink); text-shadow:var(--glow-pink); clip-path:polygon(3px 0%,100% 0%,calc(100% - 3px) 100%,0% 100%); background:rgba(255,45,120,0.05); }
@@ -184,10 +196,14 @@
   .time { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:0.05em; }
   audio { display:none; }
 
-  .lyrics-card { position:relative; height:200px; background:linear-gradient(145deg,rgba(255,45,120,0.05),rgba(0,245,212,0.05)); border:1px solid rgba(255,45,120,0.28); border-left:2px solid var(--neon-pink); clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px)); display:flex; align-items:center; justify-content:center; padding:28px 32px; }
+  .lyrics-card { position:relative; height:200px; background:linear-gradient(145deg,rgba(255,45,120,0.05),rgba(0,245,212,0.05)); border:1px solid rgba(255,45,120,0.28); border-left:2px solid var(--neon-pink); clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px)); display:flex; align-items:center; justify-content:center; padding:28px 32px; overflow:hidden; }
   .lyrics-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(to right,var(--neon-pink),transparent); }
-  .lyrics-placeholder { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(20px,4vw,26px); font-style:italic; color:rgba(240,214,234,0.5); letter-spacing:0.3em; text-align:center; user-select:none; }
-  @media (max-width:480px) { .lyrics-card { height:180px; padding:22px 18px; } }
+  .lyrics-content { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(13px,3vw,17px); font-style:italic; color:#f0d6ea; line-height:1.55; letter-spacing:0.01em; text-align:center; width:100%; opacity:0; transition:opacity 1.1s ease; user-select:none; }
+  .lyrics-content.visible { opacity:1; transition:none; }
+  .lyrics-content.eq-mode.visible { transition:opacity 1.1s ease; }
+  .eq-bars { display:flex; align-items:flex-end; justify-content:center; gap:5px; height:64px; width:100%; }
+  .eq-bar { width:6px; height:100%; background:linear-gradient(to top,var(--neon-pink),var(--neon-cyan)); box-shadow:0 0 4px rgba(255,45,120,0.45),0 0 8px rgba(0,245,212,0.2); transform-origin:bottom; transform:scaleY(0.1); transition:transform 0.09s cubic-bezier(.2,.7,.3,1); border-radius:1px; }
+  @media (max-width:480px) { .lyrics-card { height:180px; padding:22px 18px; } .eq-bars { height:54px; gap:4px; } .eq-bar { width:5px; } }
 
   /* PAGE 4 — FINALE */
   .p4-inner { position:relative; z-index:2; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 32px; text-align:center; }
@@ -286,7 +302,7 @@
       </div>
     </div>
 
-    <!-- ═══════ PAGE 2 — SONG 1: STARDUST CRUSADE ═══════ -->
+    <!-- ═══════ PAGE 2 — SONG 1: CRAZY SUNSHINE ═══════ -->
     <div class="page" id="page2">
       <div class="song-inner">
         <div class="title-row">
@@ -295,39 +311,7 @@
         </div>
         <div class="track-header">
           <span class="track-num">01</span>
-          <span class="track-title">Stardust Crusade</span>
-          <div class="dice-wrap">
-            <div class="die" id="die1"><span id="dieVal1">3</span></div>
-            <div class="die" id="die2"><span id="dieVal2">5</span></div>
-          </div>
-        </div>
-        <div class="player" id="player1">
-          <audio id="audio1" src="lovebet-stardust-crusade.mp3"></audio>
-          <div class="player-controls">
-            <button class="play-btn" onclick="togglePlay(1)" aria-label="Play">
-              <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-              <svg class="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-            </button>
-            <div class="progress-area">
-              <div class="progress-bar" id="bar1"><div class="progress-fill" id="fill1"></div><div class="progress-handle" id="handle1"></div></div>
-              <div class="time-row"><span class="time" id="cur1">0:00</span><span class="time" id="dur1">—:——</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="lyrics-card"><div class="lyrics-placeholder">♪ — — — ♪</div></div>
-      </div>
-    </div>
-
-    <!-- ═══════ PAGE 3 — SONG 2: CRAZY SUNSHINE ═══════ -->
-    <div class="page" id="page3">
-      <div class="song-inner">
-        <div class="title-row">
-          <h1 class="title" data-text="LoveBet">LoveBet</h1>
-          <span class="vol-tag">vol. 2</span>
-        </div>
-        <div class="track-header">
-          <span class="track-num">02</span>
-          <span class="track-title">Crazy Sunshine</span>
+          <span class="track-title">Crazy Diamond</span>
           <div class="diamond-wrap">
             <div class="diamond-symbol" id="diamond1">
               <svg viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg">
@@ -340,10 +324,53 @@
                 <line class="dm-facet" x1="2" y1="10" x2="24" y2="10"/>
               </svg>
             </div>
+            <div class="diamond-symbol" id="diamond2">
+              <svg viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg">
+                <polygon class="dm-facet" points="13,2 24,10 13,24 2,10"/>
+                <polygon class="dm-top" points="13,2 24,10 13,10 2,10"/>
+                <line class="dm-facet" x1="13" y1="2" x2="7" y2="10"/>
+                <line class="dm-facet" x1="13" y1="2" x2="19" y2="10"/>
+                <line class="dm-facet" x1="7" y1="10" x2="13" y2="24"/>
+                <line class="dm-facet" x1="19" y1="10" x2="13" y2="24"/>
+                <line class="dm-facet" x1="2" y1="10" x2="24" y2="10"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="player" id="player1">
+          <audio id="audio1" src="1-crazy-diamond.mp3"></audio>
+          <div class="player-controls">
+            <button class="play-btn" onclick="togglePlay(1)" aria-label="Play">
+              <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+              <svg class="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+            <div class="progress-area">
+              <div class="progress-bar" id="bar1"><div class="progress-fill" id="fill1"></div><div class="progress-handle" id="handle1"></div></div>
+              <div class="time-row"><span class="time" id="cur1">0:00</span><span class="time" id="dur1">—:——</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="lyrics-card"><div class="lyrics-content" id="lc1"></div></div>
+      </div>
+    </div>
+
+    <!-- ═══════ PAGE 3 — SONG 2: STARDUST CRUSADE ═══════ -->
+    <div class="page" id="page3">
+      <div class="song-inner">
+        <div class="title-row">
+          <h1 class="title" data-text="LoveBet">LoveBet</h1>
+          <span class="vol-tag">vol. 2</span>
+        </div>
+        <div class="track-header">
+          <span class="track-num">02</span>
+          <span class="track-title">Golden Wind</span>
+          <div class="dice-wrap">
+            <div class="die" id="die1"><span id="dieVal1">3</span></div>
+            <div class="die" id="die2"><span id="dieVal2">5</span></div>
           </div>
         </div>
         <div class="player" id="player2">
-          <audio id="audio2" src="lovebet-crazy-sunshine.mp3"></audio>
+          <audio id="audio2" src="2-golden wind.mp3"></audio>
           <div class="player-controls">
             <button class="play-btn" onclick="togglePlay(2)" aria-label="Play">
               <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
@@ -355,12 +382,86 @@
             </div>
           </div>
         </div>
-        <div class="lyrics-card"><div class="lyrics-placeholder">♪ — — — ♪</div></div>
+        <div class="lyrics-card"><div class="lyrics-content" id="lc2"></div></div>
       </div>
     </div>
 
-    <!-- ═══════ PAGE 4 — FINALE ═══════ -->
+    <!-- ═══════ PAGE 4 — SONG 3: GOLDEN WIND ═══════ -->
     <div class="page" id="page4">
+      <div class="song-inner">
+        <div class="title-row">
+          <h1 class="title" data-text="LoveBet">LoveBet</h1>
+          <span class="vol-tag">vol. 3</span>
+        </div>
+        <div class="track-header">
+          <span class="track-num">03</span>
+          <span class="track-title">Stardust Crusaders</span>
+          <div class="swirl-wrap">
+            <div class="swirl-symbol" id="swirl1">
+              <svg viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg">
+                <!-- antennae -->
+                <line class="sw-facet" x1="10.5" y1="4" x2="8" y2="1.5"/>
+                <line class="sw-facet" x1="15.5" y1="4" x2="18" y2="1.5"/>
+                <!-- head -->
+                <ellipse class="sw-facet" cx="13" cy="6" rx="3" ry="2.3"/>
+                <!-- body -->
+                <ellipse class="sw-body" cx="13" cy="15" rx="7.5" ry="7.8"/>
+                <!-- wing split -->
+                <line class="sw-facet" x1="13" y1="8" x2="13" y2="22.5"/>
+                <!-- spots -->
+                <circle class="sw-spot" cx="9.5" cy="12" r="1"/>
+                <circle class="sw-spot" cx="16.5" cy="12" r="1"/>
+                <circle class="sw-spot" cx="9" cy="17.5" r="0.9"/>
+                <circle class="sw-spot" cx="17" cy="17.5" r="0.9"/>
+                <!-- legs -->
+                <line class="sw-facet" x1="6.5" y1="13" x2="3.5" y2="11.5"/>
+                <line class="sw-facet" x1="5.8" y1="16" x2="3" y2="16"/>
+                <line class="sw-facet" x1="6.5" y1="19" x2="3.8" y2="20.5"/>
+                <line class="sw-facet" x1="19.5" y1="13" x2="22.5" y2="11.5"/>
+                <line class="sw-facet" x1="20.2" y1="16" x2="23" y2="16"/>
+                <line class="sw-facet" x1="19.5" y1="19" x2="22.2" y2="20.5"/>
+              </svg>
+            </div>
+            <div class="swirl-symbol flipped" id="swirl2">
+              <svg viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg">
+                <line class="sw-facet" x1="10.5" y1="4" x2="8" y2="1.5"/>
+                <line class="sw-facet" x1="15.5" y1="4" x2="18" y2="1.5"/>
+                <ellipse class="sw-facet" cx="13" cy="6" rx="3" ry="2.3"/>
+                <ellipse class="sw-body" cx="13" cy="15" rx="7.5" ry="7.8"/>
+                <line class="sw-facet" x1="13" y1="8" x2="13" y2="22.5"/>
+                <circle class="sw-spot" cx="9.5" cy="12" r="1"/>
+                <circle class="sw-spot" cx="16.5" cy="12" r="1"/>
+                <circle class="sw-spot" cx="9" cy="17.5" r="0.9"/>
+                <circle class="sw-spot" cx="17" cy="17.5" r="0.9"/>
+                <line class="sw-facet" x1="6.5" y1="13" x2="3.5" y2="11.5"/>
+                <line class="sw-facet" x1="5.8" y1="16" x2="3" y2="16"/>
+                <line class="sw-facet" x1="6.5" y1="19" x2="3.8" y2="20.5"/>
+                <line class="sw-facet" x1="19.5" y1="13" x2="22.5" y2="11.5"/>
+                <line class="sw-facet" x1="20.2" y1="16" x2="23" y2="16"/>
+                <line class="sw-facet" x1="19.5" y1="19" x2="22.2" y2="20.5"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="player" id="player3">
+          <audio id="audio3" src="3-stardust-crusaders.mp3"></audio>
+          <div class="player-controls">
+            <button class="play-btn" onclick="togglePlay(3)" aria-label="Play">
+              <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+              <svg class="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+            <div class="progress-area">
+              <div class="progress-bar" id="bar3"><div class="progress-fill" id="fill3"></div><div class="progress-handle" id="handle3"></div></div>
+              <div class="time-row"><span class="time" id="cur3">0:00</span><span class="time" id="dur3">—:——</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="lyrics-card"><div class="lyrics-content" id="lc3"></div></div>
+      </div>
+    </div>
+
+    <!-- ═══════ PAGE 5 — FINALE ═══════ -->
+    <div class="page" id="page5">
 
       <div class="p4-inner">
         <div class="finale-line" id="finaleLine"></div>
@@ -375,12 +476,11 @@
 <script>
 // ════ DEDICA ════
 const DEDICA = [
-  `Ho provato a farlo nel nostro <span class="glow-pink">momento peggiore</span>, un tentativo di riaccendere la <span class="glow-yellow">fiamma</span> che sembrava <span class="glow-cyan">svanire piano piano</span>.`,
-  `Ho considerato di farti una <span class="glow-cyan">sorpresa</span> se tu avessi deciso di tornare a <span class="glow-pink">casa nostra</span>, ma non rendeva giustizia all'<span class="glow-yellow">amore</span> che provo per te.`,
-  `Durante questo periodo ho sentito la necessità di imprimere la mia <span class="glow-cyan">anima</span>, le mie <span class="glow-pink">emozioni</span> in <span class="glow-yellow">parole e musica</span>.`,
-  `Ci sono momenti nella vita in cui l'<span class="glow-yellow">unica cosa</span> da fare è prendersi le proprie <span class="glow-pink">responsabilità</span>, anche se significasse <span class="glow-cyan">lasciarsi andare</span>.`,
-  `Ma è proprio questo sentimento che mi spinge a <span class="glow-pink">lottare</span> per il nostro <span class="glow-cyan">futuro insieme</span>. Non so se saremo all'altezza ma vorrei che ci dessimo <span class="glow-yellow">un'altra possibilità</span>.`,
-  `Il primo passo è una storia che parla di <span class="glow-cyan">te, di me, di noi</span>, e di una <span class="glow-pink">scommessa</span>. <span class="glow-yellow" style="font-size:clamp(20px,5vw,26px);">La mia...</span>`
+  `Ci sono state tanti <span class="glow-pink">momenti</span>, tante versioni, tante <span class="glow-cyan">emozioni diverse</span>, e in fin dei conti volevo solo <span class="glow-yellow">creare qualcosa</span> con quei sentimenti.`,
+  `Il mio percorso, la mia <span class="glow-pink">voglia</span>, i miei desideri, il <span class="glow-cyan">dolore</span>, la <span class="glow-yellow">gioia</span>, la speranza e... l'<span class="glow-pink">amore</span>.`,
+  `Se anche solo una piccola parte di te volesse <span class="glow-cyan">ascoltare</span>, mi piacerebbe raccontarti una <span class="glow-yellow">storia</span>.`,
+  `Una storia che parla di <span class="glow-cyan">te, di me, di noi</span>, nel passato, nel <span class="glow-pink">futuro</span>, qui e ora, ma anche ovunque e in <span class="glow-yellow">mille dimensioni lontane</span>.`,
+  `E di una <span class="glow-pink">scommessa</span>.<br><span class="glow-yellow" style="font-size:clamp(20px,5vw,26px);">La mia...</span>`
 ];
 const TOTAL = DEDICA.length;
 const dedicaEl  = document.getElementById('dedica-text');
@@ -394,8 +494,8 @@ const threadSvg   = document.getElementById('thread-svg');
 const threadLeft  = document.getElementById('thread-left');
 const threadRight = document.getElementById('thread-right');
 
-const SEG_DURATIONS = [15, 15, 15, 5.5]; // landing, song1, song2, finale+bow
-let segProgress = [0, 0, 0, 0];
+const SEG_DURATIONS = [15, 15, 15, 15, 5.5]; // landing, song1, song2, song3, finale+bow
+let segProgress = [0, 0, 0, 0, 0];
 let threadLengthLeft = 0, threadLengthRight = 0;
 let threadActive = false;
 let currentProgress = 0;
@@ -403,43 +503,40 @@ let threadPageReached = -1;
 
 function buildThreadPath() {
   const w = window.innerWidth, h = window.innerHeight;
-  const H = h * 4;
+  const H = h * 5;
   threadSvg.setAttribute('viewBox', `0 0 ${w} ${H}`);
   threadSvg.setAttribute('width', w);
   threadSvg.setAttribute('height', H);
 
   const inset = 6;
   const cx = w / 2;
-  const knotX = w / 2, knotY = h * 3.75;
+  const knotX = w / 2, knotY = h * 4.75;
   const r = 22;
 
   // ── LEFT THREAD ──
-  // landing: from top-center going left, then down left edge
   const L1 = `M ${cx} ${inset} L ${inset} ${inset} L ${inset} ${h}`;
-  // song 1: continue down left edge
   const L2 = ` L ${inset} ${h*2}`;
-  // song 2: continue down left edge
   const L3 = ` L ${inset} ${h*3}`;
-  // finale: smooth cubic from (inset, 3h) down-right to knot, then left heart-lobe
-  const L4approach = ` C ${inset} ${h*3.45}, ${knotX - w*0.25} ${knotY - 40}, ${knotX} ${knotY}`;
-  const L4lobe = ` C ${knotX - r*2.5} ${knotY - r*1.8}, ${knotX - r*0.3} ${knotY - r*1.5}, ${knotX} ${knotY}`;
-  const leftD = L1 + L2 + L3 + L4approach + L4lobe;
+  const L4 = ` L ${inset} ${h*4}`;
+  const L5approach = ` C ${inset} ${h*4.45}, ${knotX - w*0.25} ${knotY - 40}, ${knotX} ${knotY}`;
+  const L5lobe = ` C ${knotX - r*2.5} ${knotY - r*1.8}, ${knotX - r*0.3} ${knotY - r*1.5}, ${knotX} ${knotY}`;
+  const leftD = L1 + L2 + L3 + L4 + L5approach + L5lobe;
   threadLeft.setAttribute('d', leftD);
   threadLengthLeft = threadLeft.getTotalLength();
   threadLeft.style.strokeDasharray = threadLengthLeft;
 
-  // ── RIGHT THREAD (mirror of left across x = w/2) ──
+  // ── RIGHT THREAD (mirror) ──
   const R1 = `M ${cx} ${inset} L ${w - inset} ${inset} L ${w - inset} ${h}`;
   const R2 = ` L ${w - inset} ${h*2}`;
   const R3 = ` L ${w - inset} ${h*3}`;
-  const R4approach = ` C ${w - inset} ${h*3.45}, ${knotX + w*0.25} ${knotY - 40}, ${knotX} ${knotY}`;
-  const R4lobe = ` C ${knotX + r*2.5} ${knotY - r*1.8}, ${knotX + r*0.3} ${knotY - r*1.5}, ${knotX} ${knotY}`;
-  const rightD = R1 + R2 + R3 + R4approach + R4lobe;
+  const R4 = ` L ${w - inset} ${h*4}`;
+  const R5approach = ` C ${w - inset} ${h*4.45}, ${knotX + w*0.25} ${knotY - 40}, ${knotX} ${knotY}`;
+  const R5lobe = ` C ${knotX + r*2.5} ${knotY - r*1.8}, ${knotX + r*0.3} ${knotY - r*1.5}, ${knotX} ${knotY}`;
+  const rightD = R1 + R2 + R3 + R4 + R5approach + R5lobe;
   threadRight.setAttribute('d', rightD);
   threadLengthRight = threadRight.getTotalLength();
   threadRight.style.strokeDasharray = threadLengthRight;
 
-  // Measure cumulative lengths on LEFT thread (right is symmetric → same ratios)
   const measure = (d) => {
     const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     p.setAttribute('d', d);
@@ -451,7 +548,14 @@ function buildThreadPath() {
   const lenL1 = measure(L1);
   const lenL2 = measure(L1 + L2);
   const lenL3 = measure(L1 + L2 + L3);
-  segProgress = [lenL1 / threadLengthLeft, lenL2 / threadLengthLeft, lenL3 / threadLengthLeft, 1];
+  const lenL4 = measure(L1 + L2 + L3 + L4);
+  segProgress = [
+    lenL1 / threadLengthLeft,
+    lenL2 / threadLengthLeft,
+    lenL3 / threadLengthLeft,
+    lenL4 / threadLengthLeft,
+    1
+  ];
 
   setThreadOffset(currentProgress);
 }
@@ -676,6 +780,7 @@ function checkPassword() {
   if (entered === PASSWORD) {
     gate.classList.add('unlocking');
     startFlicker();
+    initAudioGraph();
     setTimeout(() => { gate.style.display = 'none'; document.body.classList.remove('gate-active'); }, 800);
   } else {
     errorEl.classList.add('visible');
@@ -708,7 +813,7 @@ function canSwipeDown() { return slide === TOTAL - 1; }
 // 3 -> 2 (free)
 // 1 -> 0 BLOCKED FOREVER
 function canGoTo(target) {
-  if (target < 0 || target > 3) return false;
+  if (target < 0 || target > 4) return false;
   if (target === currentPage) return false;
   if (Math.abs(target - currentPage) !== 1) return false; // only adjacent
   // Block 1 -> 0
@@ -730,6 +835,9 @@ function updatePageHints() {
     hintDownGlobal.classList.add('visible');
   } else if (currentPage === 3) {
     hintUpGlobal.classList.add('visible');
+    hintDownGlobal.classList.add('visible');
+  } else if (currentPage === 4) {
+    hintUpGlobal.classList.add('visible');
   }
 }
 
@@ -745,10 +853,10 @@ function goToPage(idx) {
   lastNavTime = Date.now();
   const prev = currentPage;
   currentPage = idx;
-  pagesWrapper.style.transform = `translateY(-${idx * 25}%)`;
+  pagesWrapper.style.transform = `translateY(-${idx * 20}%)`;
 
   // Cat visibility
-  if (idx === 0 || idx === 3) setCatVisible(true);
+  if (idx === 0 || idx === 4) setCatVisible(true);
   else setCatVisible(false);
 
   // Red thread — always visible, advances on each new page
@@ -757,12 +865,13 @@ function goToPage(idx) {
   // Audio handling
   if (idx === 1) { setTimeout(() => playSong(1), 400); }
   else if (idx === 2) { setTimeout(() => playSong(2), 400); }
+  else if (idx === 3) { setTimeout(() => playSong(3), 400); }
   else { stopAllAudio(); }
 
-  // Page 4 reveal
-  if (idx === 3) {
+  // Page 5 (finale) reveal
+  if (idx === 4) {
     setTimeout(revealFinale, 400);
-  } else if (prev === 3) {
+  } else if (prev === 4) {
     resetFinale();
   }
 
@@ -890,13 +999,13 @@ function startFlicker() { glowQ = shuffle(getGlowEls()); if (!flickerTimer) flic
 function rehookFlicker() { glowQ = shuffle(getGlowEls()); }
 
 // ════ AUDIO ════
-const audios = { 1: document.getElementById('audio1'), 2: document.getElementById('audio2') };
+const audios = { 1: document.getElementById('audio1'), 2: document.getElementById('audio2'), 3: document.getElementById('audio3') };
 let current = null;
 
 function fmt(s) { if (isNaN(s)) return '—:——'; return `${Math.floor(s / 60)}:${Math.floor(s % 60).toString().padStart(2, '0')}`; }
 
 function stopAllAudio() {
-  [1, 2].forEach(n => {
+  [1, 2, 3].forEach(n => {
     audios[n].pause();
     document.querySelector(`#player${n} .play-btn`).classList.remove('playing');
   });
@@ -904,26 +1013,33 @@ function stopAllAudio() {
 }
 
 function playSong(n) {
-  // Pause the other
-  const other = n === 1 ? 2 : 1;
-  audios[other].pause();
-  audios[other].currentTime = 0;
-  document.querySelector(`#player${other} .play-btn`).classList.remove('playing');
-  // Reset & play target
-  const a = audios[n];
-  const btn = document.querySelector(`#player${n} .play-btn`);
-  a.currentTime = 0;
-  a.play().then(() => { btn.classList.add('playing'); current = n; }).catch(() => {});
+  ensureAudioRunning().then(() => {
+    // Pause all others
+    [1, 2, 3].forEach(k => {
+      if (k !== n) {
+        audios[k].pause();
+        audios[k].currentTime = 0;
+        document.querySelector(`#player${k} .play-btn`).classList.remove('playing');
+      }
+    });
+    // Reset & play target
+    const a = audios[n];
+    const btn = document.querySelector(`#player${n} .play-btn`);
+    a.currentTime = 0;
+    resetLyricsForSong(n);
+    a.play().then(() => { btn.classList.add('playing'); current = n; }).catch(() => {});
+  });
 }
 
 function togglePlay(n) {
   const a = audios[n], b = document.querySelector(`#player${n} .play-btn`);
   if (current && current !== n) { audios[current].pause(); document.querySelector(`#player${current} .play-btn`).classList.remove('playing'); }
-  if (a.paused) { a.play(); b.classList.add('playing'); current = n; }
-  else { a.pause(); b.classList.remove('playing'); current = null; }
+  if (a.paused) {
+    ensureAudioRunning().then(() => { a.play(); b.classList.add('playing'); current = n; });
+  } else { a.pause(); b.classList.remove('playing'); current = null; }
 }
 
-[1, 2].forEach(n => {
+[1, 2, 3].forEach(n => {
   const bar = document.getElementById(`bar${n}`), a = audios[n];
   let sk = false;
   const st = cx => { const r = bar.getBoundingClientRect(); if (a.duration) a.currentTime = Math.min(Math.max((cx - r.left) / r.width, 0), 1) * a.duration; };
@@ -933,13 +1049,14 @@ function togglePlay(n) {
   bar.addEventListener('pointercancel', () => { sk = false; bar.style.cursor = ''; document.getElementById(`handle${n}`).style.opacity = ''; });
 });
 
-[1, 2].forEach(n => {
+[1, 2, 3].forEach(n => {
   const a = audios[n];
   a.addEventListener('timeupdate', () => {
     const p = a.duration ? (a.currentTime / a.duration) * 100 : 0;
     document.getElementById(`fill${n}`).style.width = p + '%';
     document.getElementById(`handle${n}`).style.left = p + '%';
     document.getElementById(`cur${n}`).textContent = fmt(a.currentTime);
+    updateLyricsForSong(n);
   });
   a.addEventListener('loadedmetadata', () => { document.getElementById(`dur${n}`).textContent = fmt(a.duration); });
   a.addEventListener('ended', () => {
@@ -948,33 +1065,267 @@ function togglePlay(n) {
   });
 });
 
-// ════ DICE & DIAMOND ════
+// ════ LYRICS ENGINE ════
+// Timed subtitle-style lyrics card, fully driven by audio.currentTime.
+// Each song has an ordered list of segments; the active segment is the one
+// with the highest start ≤ currentTime. Segment transitions mirror the
+// dedica's fade-out (1.1s) + ink-in (wrapWords, 35ms stagger).
+const LYRICS = {
+  1: [
+    { type: 'placeholder', start: 0 },
+    { type: 'lyrics', start: 24,  text: `I still see that river when I close my eyes\nyou're laughing at nothing, your hair still wet from the water\nthe afternoon bent like it had nowhere else to be\neven the light followed you around` },
+    { type: 'lyrics', start: 38,  text: `You just showed up, no warning, no reason given\ndidn't ask, you always knew before I did\nthere were things I kept meaning to say out loud\nmost of them got lost on the way out` },
+    { type: 'lyrics', start: 52,  text: `I keep turning it over in the dark\ntrying to find the crack where I lost you\nor where you lost me\nI'm not even sure anymore` },
+    { type: 'lyrics', start: 65,  text: `But I'm not ready to call this what it is\nI've seen how you fight the things that tried to break you` },
+    { type: 'lyrics', start: 78,  text: `and I know I got heavy, I know I pulled the sky down\nbut I'm still here\nstill trying to be worth the sun you carry` },
+    { type: 'placeholder', start: 95 },
+    { type: 'lyrics', start: 106, text: `every time you walked in I forgot what was heavy\nthe way you moved like the room was already yours\nthat slow smile before you even reached me\nI've been living in that moment ever since` },
+    { type: 'lyrics', start: 122, text: `You were never the kind to stay where it hurts\nyou took everything life threw and wore it like proof\nI'm scared I'm the one thing you'll not figure out\nand that's the knot I can't think my way out` },
+    { type: 'lyrics', start: 137, text: `Some nights I hear it, loud and ugly —\nyou're losing your light\nbecause of a dark you can't even name\nand I hate that it's not wrong` },
+    { type: 'lyrics', start: 149, text: `But I'm not ready to call this what it is\nI've seen how you fight the things that tried to break you` },
+    { type: 'lyrics', start: 162, text: `and I know I got heavy, I know I pulled the sky down\nbut I'm still here\nstill trying to be worth the sun you carry` },
+    { type: 'placeholder', start: 180 },
+    { type: 'lyrics', start: 201, text: `I never meant for you to suffer\nI just wanted to be the place you felt safe coming home to\nI still think I can be that\nI guess that's the only bet worth making` },
+    { type: 'placeholder', start: 234 },
+    { type: 'lyrics', start: 245, text: `I still see our couch when the night gets quiet\nyou after dinner, not saying much\nsomething small curled up and breathing on you\neven the little ones knew where home was` },
+    { type: 'lyrics', start: 262, text: `That's what I know.\nThat's what I'm not letting go.` },
+  ],
+  2: [{ type: 'placeholder', start: 0 }],
+  3: [{ type: 'placeholder', start: 0 }],
+};
+
+const LYRICS_FADE_MS = 1100;
+const LYRICS_INK_STAGGER = 35;
+const EQ_BAR_COUNT = 7;
+const EQ_BANDS = [[0,2],[2,4],[4,7],[7,11],[11,16],[16,22],[22,32]];
+
+const lyricsState = {};
+[1, 2, 3].forEach(n => {
+  lyricsState[n] = {
+    el: document.getElementById(`lc${n}`),
+    segments: LYRICS[n],
+    currentIdx: -1,
+    pendingSwap: null,
+    inkTimeouts: [],
+    bars: [],
+  };
+});
+
+// ── Web Audio graph ──
+// DISABLED on file:// protocol: createMediaElementSource reroutes audio through
+// the Web Audio graph, and on local files the destination node doesn't emit
+// sound to the speakers in Chrome. The EQ visualization falls back to the
+// sine-wave animation (see eqTick → audioNodes[n] undefined branch).
+let audioCtx = null;
+const audioNodes = {};
+
+function initAudioGraph() {
+  // no-op: audio plays through the native <audio> element output
+}
+
+function ensureAudioRunning() {
+  if (audioCtx && audioCtx.state === 'suspended') {
+    return audioCtx.resume().catch(() => {});
+  }
+  return Promise.resolve();
+}
+
+// ── Segment lookup ──
+function findSegmentIdx(segments, t) {
+  for (let i = segments.length - 1; i >= 0; i--) {
+    if (t >= segments[i].start) return i;
+  }
+  return 0;
+}
+
+// ── Render ──
+function buildEqDom() {
+  const wrap = document.createElement('div');
+  wrap.className = 'eq-bars';
+  for (let i = 0; i < EQ_BAR_COUNT; i++) {
+    const b = document.createElement('div');
+    b.className = 'eq-bar';
+    wrap.appendChild(b);
+  }
+  return wrap;
+}
+
+function renderSegment(n) {
+  const state = lyricsState[n];
+  const seg = state.segments[state.currentIdx];
+  if (!seg) return;
+  // Cancel any ink-in timeouts from a previous render
+  state.inkTimeouts.forEach(id => clearTimeout(id));
+  state.inkTimeouts = [];
+  state.el.innerHTML = '';
+  state.bars = [];
+  state.el.classList.remove('eq-mode');
+  if (seg.type === 'placeholder') {
+    const dom = buildEqDom();
+    state.el.appendChild(dom);
+    state.bars = Array.from(dom.querySelectorAll('.eq-bar'));
+    state.el.classList.add('eq-mode');
+    requestAnimationFrame(() => state.el.classList.add('visible'));
+  } else {
+    state.el.innerHTML = seg.text.replace(/\n/g, '<br>');
+    const words = wrapWords(state.el);
+    requestAnimationFrame(() => {
+      state.el.classList.add('visible');
+      words.forEach((w, i) => {
+        state.inkTimeouts.push(setTimeout(() => w.classList.add('in'), i * LYRICS_INK_STAGGER));
+      });
+    });
+  }
+}
+
+// ── Main update, called from timeupdate ──
+function updateLyricsForSong(n) {
+  const state = lyricsState[n];
+  if (!state || !state.segments) return;
+  const idx = findSegmentIdx(state.segments, audios[n].currentTime);
+  if (idx === state.currentIdx) return;
+  const newSeg = state.segments[idx];
+  const domIsPlaceholder = state.bars.length > 0;
+  state.currentIdx = idx;
+  // Fast path: DOM already shows an EQ placeholder and target is placeholder too
+  // → no visible change required, keep things as they are (avoids 1.1s dead air)
+  if (domIsPlaceholder && newSeg.type === 'placeholder') {
+    if (!state.el.classList.contains('visible')) state.el.classList.add('visible');
+    return;
+  }
+  state.el.classList.remove('visible');
+  if (state.pendingSwap) clearTimeout(state.pendingSwap);
+  state.pendingSwap = setTimeout(() => {
+    state.pendingSwap = null;
+    renderSegment(n);
+  }, LYRICS_FADE_MS);
+}
+
+function resetLyricsForSong(n) {
+  const state = lyricsState[n];
+  if (!state) return;
+  if (state.pendingSwap) { clearTimeout(state.pendingSwap); state.pendingSwap = null; }
+  state.inkTimeouts.forEach(id => clearTimeout(id));
+  state.inkTimeouts = [];
+  state.currentIdx = -1;
+  updateLyricsForSong(n);
+}
+
+// ── EQ rendering loop (single global rAF) ──
+function avgBin(data, s, e) {
+  let sum = 0; for (let i = s; i < e; i++) sum += data[i];
+  return sum / (e - s) / 255;
+}
+
+function eqTick(ts) {
+  for (let n = 1; n <= 3; n++) {
+    const state = lyricsState[n];
+    if (!state || state.bars.length === 0) continue;
+    const seg = state.segments[state.currentIdx];
+    if (!seg || seg.type !== 'placeholder') continue;
+    const audio = audios[n];
+    if (audio.paused) {
+      state.bars.forEach(b => b.style.transform = 'scaleY(0.1)');
+      continue;
+    }
+    const nodes = audioNodes[n];
+    if (nodes) {
+      nodes.analyser.getByteFrequencyData(nodes.data);
+      for (let i = 0; i < EQ_BAR_COUNT; i++) {
+        const v = avgBin(nodes.data, EQ_BANDS[i][0], EQ_BANDS[i][1]);
+        state.bars[i].style.transform = `scaleY(${0.08 + v * 0.92})`;
+      }
+    } else {
+      // Fallback when Web Audio unavailable
+      for (let i = 0; i < EQ_BAR_COUNT; i++) {
+        const v = 0.2 + 0.4 * Math.abs(Math.sin(ts * 0.004 + i * 0.6));
+        state.bars[i].style.transform = `scaleY(${v})`;
+      }
+    }
+  }
+  requestAnimationFrame(eqTick);
+}
+requestAnimationFrame(eqTick);
+
+// ── Initial render: all cards start in placeholder ──
+[1, 2, 3].forEach(n => {
+  lyricsState[n].currentIdx = 0;
+  renderSegment(n);
+});
+
+// ════ DICE, DIAMONDS & LADYBUGS ════
+
+// ── Diamonds — d1 every 2s, d2 every 5s, both launched at t=0 so they sync every 10s ──
+const dm1El = document.getElementById('diamond1');
+const dm2El = document.getElementById('diamond2');
+function flashDiamond(el) {
+  el.style.setProperty('--dm-color', 'rgba(0,245,212,0.7)');
+  el.style.setProperty('--dm-glow', 'rgba(0,245,212,0.5)');
+  el.classList.add('flash');
+  setTimeout(() => {
+    el.classList.remove('flash');
+    el.style.setProperty('--dm-color', 'rgba(255,45,120,0.5)');
+    el.style.setProperty('--dm-glow', 'rgba(255,45,120,0.25)');
+  }, 1200);
+}
+// Fire at t=0 so both cycles are phase-aligned — LCM(2,5)=10 → they re-align every 10s
+flashDiamond(dm1El);
+flashDiamond(dm2El);
+setInterval(() => flashDiamond(dm1El), 2000);
+setInterval(() => flashDiamond(dm2El), 5000);
+
+// ── Dice — 4-roll cycle: 3 random faces, then B+M, repeat forever ──
 const d1El = document.getElementById('die1'), d2El = document.getElementById('die2');
 const v1 = document.getElementById('dieVal1'), v2 = document.getElementById('dieVal2');
-const faces = ['1', '2', '3', '4', '5', '6']; let rc = 0;
-const dmEl = document.getElementById('diamond1');
-setInterval(() => {
-  dmEl.style.setProperty('--dm-color', 'rgba(0,245,212,0.7)');
-  dmEl.style.setProperty('--dm-glow', 'rgba(0,245,212,0.5)');
-  dmEl.classList.add('flash');
-  setTimeout(() => {
-    dmEl.classList.remove('flash');
-    dmEl.style.setProperty('--dm-color', 'rgba(255,45,120,0.5)');
-    dmEl.style.setProperty('--dm-glow', 'rgba(255,45,120,0.25)');
-  }, 1500);
-}, 6000);
+const faces = ['1', '2', '3', '4', '5', '6'];
+let rc = 0;
 
 function rollDice() {
-  rc++; const sp = rc % 3 === 0;
-  d1El.classList.remove('rolling', 'special'); d2El.classList.remove('rolling', 'special');
+  rc++;
+  const isSpecial = rc % 4 === 0; // every 4th roll → B + M
+  d1El.classList.remove('rolling', 'special');
+  d2El.classList.remove('rolling', 'special');
   void d1El.offsetWidth; void d2El.offsetWidth;
-  d1El.classList.add('rolling'); d2El.classList.add('rolling');
+  d1El.classList.add('rolling');
+  d2El.classList.add('rolling');
   setTimeout(() => {
-    if (sp) { v1.textContent = 'B'; v2.textContent = 'M'; d1El.classList.add('special'); d2El.classList.add('special'); }
-    else { v1.textContent = faces[Math.floor(Math.random() * 6)]; v2.textContent = faces[Math.floor(Math.random() * 6)]; d1El.classList.remove('special'); d2El.classList.remove('special'); }
+    if (isSpecial) {
+      v1.textContent = 'B';
+      v2.textContent = 'M';
+      d1El.classList.add('special');
+      d2El.classList.add('special');
+    } else {
+      v1.textContent = faces[Math.floor(Math.random() * 6)];
+      v2.textContent = faces[Math.floor(Math.random() * 6)];
+    }
   }, 200);
 }
-setInterval(rollDice, 2500);
+rollDice();
+setInterval(rollDice, 2000);
+
+// ── Ladybugs — alternating flash, one at a time every 1.5s ──
+// lb1 at t=0, lb2 at t=1.5, lb1 at t=3, lb2 at t=4.5, ...
+// Each individual bug has a 3s cycle; the 1.5s phase offset means exactly one
+// bug is lit at any given moment.
+const lb1El = document.getElementById('swirl1');
+const lb2El = document.getElementById('swirl2');
+function flashLadybug(el) {
+  el.style.setProperty('--sw-color', 'rgba(0,245,212,0.7)');
+  el.style.setProperty('--sw-glow', 'rgba(0,245,212,0.5)');
+  el.classList.add('flash');
+  setTimeout(() => {
+    el.classList.remove('flash');
+    el.style.setProperty('--sw-color', 'rgba(255,45,120,0.55)');
+    el.style.setProperty('--sw-glow', 'rgba(255,45,120,0.3)');
+  }, 700);
+}
+let lbTurn = 0; // 0 → lb1 next, 1 → lb2 next
+function tickLadybug() {
+  flashLadybug(lbTurn === 0 ? lb1El : lb2El);
+  lbTurn = 1 - lbTurn;
+}
+tickLadybug(); // immediate flash of lb1 at t=0
+setInterval(tickLadybug, 1500);
 
 // ════ INIT ════
 window.addEventListener('load', updatePageHints);
