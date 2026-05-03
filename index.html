@@ -45,7 +45,7 @@
   }
 
   /* RED THREAD — lives inside pages-wrapper, moves with it */
-  #thread-svg { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:5; overflow:visible; opacity:0; transition:opacity 0.6s ease; }
+  #thread-svg { position:absolute; top:0; left:0; pointer-events:none; z-index:5; overflow:visible; opacity:0; transition:opacity 0.6s ease; }
   #thread-svg.active { opacity:1; }
   .thread-line { fill:none; stroke:var(--red-thread); stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 3px var(--red-thread)) drop-shadow(0 0 8px rgba(230,57,70,0.55)); opacity:0.5; }
   .thread-line.idle-flicker { animation:threadFlicker 5.5s ease-in-out infinite; }
@@ -53,8 +53,8 @@
 
   /* VIEWPORT / 4 PAGES */
   #viewport { position:fixed; inset:0; overflow:hidden; z-index:1; }
-  #pages-wrapper { position:absolute; top:0; left:0; width:100%; height:500%; transform:translateY(0); transition:transform 0.65s cubic-bezier(.22,.8,.36,1); will-change:transform; }
-  .page { position:relative; width:100%; height:20%; overflow:hidden; }
+  #pages-wrapper { position:absolute; top:0; left:0; width:100%; height:600%; transform:translateY(0); transition:transform 0.65s cubic-bezier(.22,.8,.36,1); will-change:transform; }
+  .page { position:relative; width:100%; height:calc(100% / 6); overflow:hidden; }
   #page1 { overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; scrollbar-width:none; overscroll-behavior-y:contain; }
   #page1::-webkit-scrollbar { display:none; }
 
@@ -83,6 +83,13 @@
   @keyframes catYawn { 0%{transform:scale(1) rotate(0);} 20%{transform:scale(1.18) rotate(-6deg);} 45%{transform:scale(1.22) rotate(4deg);} 70%{transform:scale(1.08) rotate(-2deg);} 100%{transform:scale(1) rotate(0);} }
   #boddo-hint { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:0.18em; color:var(--neon-cyan); text-shadow:var(--glow-cyan); text-transform:uppercase; white-space:nowrap; opacity:1; transition:opacity 0.4s ease; }
   #boddo-hint.hidden { display:none; }
+
+  /* Hell cat — corner-only, only on song 4. Reuses catYawn keyframes + float animation. */
+  #hell-cat-wrap { position:fixed; top:16px; right:16px; z-index:600; cursor:pointer; -webkit-tap-highlight-color:transparent; user-select:none; opacity:0; pointer-events:none; transition:opacity 0.6s ease; }
+  #hell-cat-wrap.visible { opacity:1; pointer-events:auto; animation:float 4s ease-in-out infinite; }
+  #hell-cat-inner { filter:drop-shadow(0 0 10px rgba(200,30,0,0.8)) drop-shadow(0 0 22px rgba(255,140,40,0.4)); transform-origin:center center; transition:filter 0.6s ease; }
+  #hell-cat-inner.yawning { animation:catYawn 0.65s ease forwards; }
+  #hell-cat-inner.yawning #hell-cat-mouth { opacity:1 !important; }
 
   .eyebrow { font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:0.35em; text-transform:uppercase; color:var(--neon-cyan); text-shadow:var(--glow-cyan); margin-bottom:20px; }
   .divider  { width:1px; height:44px; background:linear-gradient(to bottom,transparent,var(--neon-pink),transparent); box-shadow:var(--glow-pink); }
@@ -205,6 +212,75 @@
   .eq-bar { width:6px; height:100%; background:linear-gradient(to top,var(--neon-pink),var(--neon-cyan)); box-shadow:0 0 4px rgba(255,45,120,0.45),0 0 8px rgba(0,245,212,0.2); transform-origin:bottom; transform:scaleY(0.1); transition:transform 0.09s cubic-bezier(.2,.7,.3,1); border-radius:1px; }
   @media (max-width:480px) { .lyrics-card { height:180px; padding:22px 18px; gap:18px; } .eq-bars { height:54px; gap:4px; } .eq-bar { width:5px; } .show-lyrics-btn { font-size:10px; letter-spacing:0.28em; padding:9px 14px; } }
 
+  /* ═══════ FLAME (FINALE) ═══════ */
+  .flame-prompt { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:0.32em; text-transform:uppercase; color:#ffb347; text-shadow:0 0 6px rgba(255,120,40,0.7),0 0 14px rgba(255,60,10,0.45); margin:42px 0 14px; opacity:0; transform:translateY(6px); transition:opacity 0.9s ease 0.15s, transform 0.9s ease 0.15s; }
+  .flame-prompt.in { opacity:1; transform:translateY(0); }
+  .flame-btn { display:inline-flex; align-items:center; justify-content:center; width:78px; height:108px; background:transparent; border:none; padding:0; cursor:pointer; -webkit-tap-highlight-color:transparent; opacity:0; transform:scale(0.05); transform-origin:50% 95%; transition:opacity 1.4s cubic-bezier(.2,.7,.3,1), transform 1.6s cubic-bezier(.2,.8,.3,1.05); will-change:opacity,transform; }
+  .flame-btn.in { opacity:1; transform:scale(1); }
+  .flame-btn.in .flame-svg { animation:flameFlicker 0.42s ease-in-out infinite alternate; }
+  .flame-svg { width:100%; height:100%; filter:drop-shadow(0 0 6px rgba(255,80,0,0.7)) drop-shadow(0 0 18px rgba(255,140,40,0.5)) drop-shadow(0 0 32px rgba(255,40,0,0.35)); transform-origin:50% 95%; }
+  .flame-core { animation:flameCore 0.6s ease-in-out infinite alternate; transform-origin:50% 95%; }
+  .flame-btn:active .flame-svg { transform:scale(1.08); }
+  @keyframes flameFlicker {
+    0%   { transform:scale(1, 1) translateY(0); }
+    50%  { transform:scale(1.04, 0.97) translateY(-1px); }
+    100% { transform:scale(0.97, 1.05) translateY(0.5px); }
+  }
+  @keyframes flameCore {
+    0% { opacity:0.7; transform:scaleY(1); }
+    100% { opacity:1; transform:scaleY(1.15); }
+  }
+
+  /* ═══════ PAGE 6 — HELLISH SONG 4 ═══════ */
+  #page6 { background:radial-gradient(ellipse at 50% 50%, #1a0500 0%, #080100 65%, #000 100%); }
+  #page6 .title { color:#ff5a1a; text-shadow:0 0 8px rgba(255,80,20,0.65),0 0 18px rgba(255,40,0,0.45); }
+  #page6 .vol-tag { color:#ffb347; border-color:rgba(255,120,40,0.55); background:rgba(255,80,20,0.08); text-shadow:0 0 5px rgba(255,120,40,0.6); }
+  #page6 .track-num { color:#ffb347; text-shadow:0 0 6px rgba(255,140,40,0.7); }
+  #page6 .track-title { color:#ff7a2e; text-shadow:0 0 6px rgba(255,80,20,0.5); }
+  #page6 .player { background:linear-gradient(145deg,rgba(120,15,0,0.18),rgba(255,90,20,0.06)); border-color:rgba(255,80,20,0.4); border-left-color:#ff5a1a; }
+  #page6 .player::before { background:linear-gradient(to right,#ff5a1a,transparent); }
+  #page6 .play-btn { background:linear-gradient(135deg,#ff5a1a,#7a0a00); box-shadow:0 0 14px rgba(255,80,20,0.6); }
+  #page6 .progress-fill { background:linear-gradient(to right,#ff5a1a,#ffd24d); box-shadow:0 0 6px rgba(255,80,20,0.55); }
+  #page6 .progress-handle { box-shadow:0 0 8px rgba(255,140,40,0.8); }
+  #page6 .time { color:rgba(255,180,90,0.7); }
+  #page6 .lyrics-card { background:linear-gradient(145deg,rgba(255,80,20,0.06),rgba(255,200,60,0.04)); border-color:rgba(255,80,20,0.4); border-left-color:#ff5a1a; }
+  #page6 .lyrics-card::before { background:linear-gradient(to right,#ff5a1a,transparent); }
+  #page6 .show-lyrics-btn { color:#ff7a2e; background:rgba(255,80,20,0.1); border-color:rgba(255,80,20,0.5); text-shadow:0 0 6px rgba(255,80,20,0.55); }
+  #page6 .show-lyrics-btn:hover, #page6 .show-lyrics-btn:active { background:rgba(255,80,20,0.22); color:#fff; box-shadow:0 0 12px rgba(255,80,20,0.55); }
+  #page6 .eq-bar { background:linear-gradient(to top,#c81a00,#ffd24d); box-shadow:0 0 4px rgba(255,80,20,0.55),0 0 8px rgba(255,200,60,0.25); }
+
+  #page6 .song-inner { position:relative; z-index:1; }
+
+  /* Hide the global cyberpunk flowers while on song 4 — the infernal set inside #page6 takes over */
+  body.on-hell #bg-flowers { display:none; }
+
+  /* Infernal flower set — same positions/structure as #bg-flowers, ember palette */
+  .hell-flowers { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .hell-flowers .flower { position:absolute; pointer-events:none; opacity:0.16; }
+  .hell-flowers .flower svg { display:block; width:220px; height:auto; }
+  .hell-flowers .flower-orange-tl { top:3%; left:2%; transform:rotate(-20deg); }
+  .hell-flowers .flower-orange-tl svg { filter:drop-shadow(0 0 8px rgba(255,140,40,0.7)); }
+  .hell-flowers .flower-red-br { bottom:calc(80px + env(safe-area-inset-bottom,0px)); right:2%; transform:rotate(15deg); }
+  .hell-flowers .flower-red-br svg { filter:drop-shadow(0 0 8px rgba(200,30,0,0.65)); }
+  .hell-flowers .flower-gold-c { top:50%; left:50%; transform:translate(-50%,-50%); }
+  .hell-flowers .flower-gold-c svg { filter:drop-shadow(0 0 8px rgba(255,200,80,0.6)); }
+  @media (max-width:480px) {
+    .hell-flowers .flower svg { width:170px; }
+    .hell-flowers .flower-orange-tl { top:2%; left:0; }
+    .hell-flowers .flower-red-br { right:0; }
+  }
+  @media (max-width:380px) { .hell-flowers .flower svg { width:150px; } }
+
+  /* Two burning flames — track-header symbol for song 4 */
+  .song-flames-wrap { display:flex; gap:6px; align-items:center; margin-left:auto; }
+  .song-flame { width:18px; height:26px; transform-origin:50% 95%; filter:drop-shadow(0 0 3px rgba(255,80,20,0.7)) drop-shadow(0 0 8px rgba(255,140,40,0.45)); animation:songFlameFlicker 0.5s ease-in-out infinite alternate; }
+  .song-flame-2 { animation-duration:0.62s; animation-delay:0.18s; }
+  @keyframes songFlameFlicker {
+    0%   { transform:scale(1, 1) translateY(0); }
+    50%  { transform:scale(1.04, 0.96) translateY(0.5px); }
+    100% { transform:scale(0.94, 1.06) translateY(-1px); }
+  }
+
   /* ═══════ LYRICS VIEW OVERLAY ═══════ */
   #lyrics-view { position:fixed; inset:0; z-index:800; background:#050505; color:#f5e9ef; display:flex; flex-direction:column; transform:translateY(100%); transition:transform 0.42s cubic-bezier(.2,.7,.3,1); pointer-events:none; will-change:transform; }
   #lyrics-view.open { transform:translateY(0); pointer-events:auto; }
@@ -215,8 +291,10 @@
   .lv-btn:hover, .lv-btn:active { background:rgba(255,45,120,0.15); }
   .lv-back svg { width:22px; height:22px; }
   .lv-title { font-family:'Rajdhani',sans-serif; font-size:15px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; text-shadow:0 0 8px rgba(255,45,120,0.4); flex:1; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding:0 8px; }
-  .lv-lang { font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:0.3em; color:var(--neon-cyan); border:1px solid rgba(0,245,212,0.35); padding:4px 10px; clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px)); text-shadow:0 0 5px rgba(0,245,212,0.5); min-width:38px; text-align:center; }
-  .lv-body { position:relative; z-index:2; flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:32px 26px 140px; font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(16px,4.6vw,22px); font-style:italic; color:#f0d6ea; line-height:1.7; letter-spacing:0.01em; white-space:pre-wrap; text-align:left; }
+  .lv-lang { font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:0.3em; color:var(--neon-cyan); background:rgba(0,245,212,0.05); border:1px solid rgba(0,245,212,0.35); padding:4px 10px; clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px)); text-shadow:0 0 5px rgba(0,245,212,0.5); min-width:38px; text-align:center; cursor:pointer; transition:background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; }
+  .lv-lang:hover, .lv-lang:active { background:rgba(0,245,212,0.18); color:#fff; box-shadow:0 0 10px rgba(0,245,212,0.45); }
+  .lv-body { position:relative; z-index:2; flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:32px 26px 140px; font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(16px,4.6vw,22px); font-style:italic; color:#f0d6ea; line-height:1.7; letter-spacing:0.01em; white-space:pre-wrap; text-align:left; transition:opacity 0.32s ease, transform 0.32s ease; }
+  .lv-body.swapping { opacity:0; transform:translateY(8px); }
   .lv-body::-webkit-scrollbar { width:0; height:0; }
   .lv-player { position:absolute; left:0; right:0; bottom:0; z-index:3; display:flex; align-items:center; gap:14px; padding:14px 18px calc(env(safe-area-inset-bottom) + 14px); background:linear-gradient(to top,rgba(5,5,5,0.96) 0%,rgba(5,5,5,0.92) 65%,rgba(5,5,5,0) 100%); border-top:1px solid rgba(255,45,120,0.2); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
   .lv-play-btn { width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg,var(--neon-pink),#c01f5a); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 0 14px rgba(255,45,120,0.55); flex-shrink:0; padding:0; transition:transform 0.15s ease; }
@@ -233,6 +311,44 @@
   .lv-time-row { display:flex; justify-content:space-between; font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:0.1em; color:rgba(245,233,239,0.6); }
   @media (max-width:480px) { .lv-body { font-size:18px; padding:26px 20px 130px; } .lv-header { padding:calc(env(safe-area-inset-top) + 12px) 14px 12px; } .lv-title { font-size:13px; } .lv-play-btn { width:42px; height:42px; } }
 
+  /* ═══════ FIRE TRANSITION (flame click → song 4) ═══════ */
+  #fire-transition { position:fixed; inset:0; z-index:900; pointer-events:none; opacity:0; visibility:hidden; }
+  #fire-transition.active { pointer-events:auto; opacity:1; visibility:visible; }
+  #fire-transition.dissolve { opacity:0; transition:opacity 0.55s ease-out 0.05s; }
+  .fire-layer { position:absolute; inset:0; pointer-events:none; }
+  .fire-base {
+    background:radial-gradient(circle at 50% 100%,
+      rgba(255,250,210,1) 0%,
+      rgba(255,180,60,1) 12%,
+      rgba(255,90,20,0.96) 28%,
+      rgba(180,30,0,0.93) 50%,
+      rgba(40,5,0,0.97) 80%,
+      rgba(0,0,0,1) 100%);
+    clip-path:circle(0% at var(--fire-x, 50%) var(--fire-y, 90%));
+    transition:clip-path 0.55s cubic-bezier(0.4, 0, 0.45, 1);
+  }
+  #fire-transition.expand .fire-base { clip-path:circle(160% at var(--fire-x, 50%) var(--fire-y, 90%)); }
+  .fire-flicker {
+    background:
+      radial-gradient(ellipse 50% 38% at 25% 75%, rgba(255,180,60,0.55) 0%, transparent 60%),
+      radial-gradient(ellipse 45% 32% at 70% 80%, rgba(255,90,20,0.55) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 50% 40%, rgba(255,220,90,0.4) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 38% at 35% 30%, rgba(255,120,40,0.45) 0%, transparent 60%);
+    mix-blend-mode:screen; opacity:0; transition:opacity 0.35s ease 0.1s;
+  }
+  #fire-transition.expand .fire-flicker { opacity:1; animation:fireFlickerAnim 0.16s ease-in-out infinite alternate; }
+  @keyframes fireFlickerAnim {
+    0%   { transform:translateY(0) scaleY(1); filter:brightness(1); }
+    100% { transform:translateY(-2.5%) scaleY(1.06); filter:brightness(1.18); }
+  }
+  .ember { position:absolute; width:5px; height:5px; bottom:-12px; background:radial-gradient(circle,#fff 0%,#ffe066 35%,#ff7e2e 65%,transparent 100%); border-radius:50%; opacity:0; }
+  #fire-transition.expand .ember { animation:emberRise 1.3s cubic-bezier(0.3, 0.5, 0.3, 1) forwards; }
+  @keyframes emberRise {
+    0%   { opacity:0; transform:translateY(0) scale(0.4); }
+    14%  { opacity:1; transform:translateY(-18vh) scale(1); }
+    100% { opacity:0; transform:translateY(-115vh) scale(0.5); }
+  }
+
   /* PAGE 4 — FINALE */
   .p4-inner { position:relative; z-index:2; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 32px; text-align:center; }
   @media (max-width:480px) { .p4-inner { padding:0 20px; } }
@@ -247,6 +363,12 @@
 </style>
 </head>
 <body class="gate-active">
+
+<!-- INTRO TRACK — plays from the gate page, loops until song 1 starts -->
+<audio id="audio0" src="0-lovebet.mp3" loop preload="auto"></audio>
+
+<!-- FINALE AMBIENCE — heavenly-demon, plays on the page between song 3 and song 4 -->
+<audio id="audioFinale" src="0-heavenly-demon.mp3" loop preload="auto"></audio>
 
 <!-- GATE -->
 <div id="gate">
@@ -284,6 +406,50 @@
     </svg>
   </div>
   <p id="boddo-hint">Accarezza il Boddo per iniziare</p>
+</div>
+
+<!-- HELL CAT — only visible on song 4 (page 6) -->
+<div id="hell-cat-wrap">
+  <div id="hell-cat-inner">
+    <svg width="52" height="52" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+      <!-- Devil horns -->
+      <polygon points="10,0 11,7 13,7" fill="#c81a00" stroke="#7a0a00" stroke-width="0.3"/>
+      <polygon points="42,0 41,7 39,7" fill="#c81a00" stroke="#7a0a00" stroke-width="0.3"/>
+      <line x1="11" y1="6" x2="10.5" y2="2" stroke="#ff7a2e" stroke-width="0.4" opacity="0.7"/>
+      <line x1="41" y1="6" x2="41.5" y2="2" stroke="#ff7a2e" stroke-width="0.4" opacity="0.7"/>
+      <!-- Outer ears (dark) and inner ears (deep red) -->
+      <polygon points="7,22 12,5 19,20" fill="#1a0500"/>
+      <polygon points="33,20 40,5 45,22" fill="#1a0500"/>
+      <polygon points="10,21 12,11 17,20" fill="#5a0a00"/>
+      <polygon points="35,20 40,11 42,21" fill="#5a0a00"/>
+      <!-- Head -->
+      <ellipse cx="26" cy="30" rx="20" ry="18" fill="#1a0500"/>
+      <!-- Muzzle -->
+      <ellipse cx="26" cy="36" rx="9" ry="7" fill="#3a0a02"/>
+      <!-- LEFT eye — open, slit pupil centered -->
+      <ellipse cx="19" cy="27" rx="5" ry="5.5" fill="#ff5a1a"/>
+      <ellipse cx="19" cy="27.5" rx="0.9" ry="4.8" fill="#0a0000"/>
+      <circle cx="20.5" cy="25.5" r="1.1" fill="#ffe066" opacity="0.95"/>
+      <!-- RIGHT eye — open, slit pupil centered -->
+      <ellipse cx="33" cy="27" rx="5" ry="5.5" fill="#ff5a1a"/>
+      <ellipse cx="33" cy="27.5" rx="0.9" ry="4.8" fill="#0a0000"/>
+      <circle cx="34.5" cy="25.5" r="1.1" fill="#ffe066" opacity="0.95"/>
+      <!-- Nose (dark crimson) -->
+      <ellipse cx="26" cy="34" rx="2" ry="1.4" fill="#c81a00"/>
+      <!-- Yawn mouth (revealed during catYawn animation) -->
+      <polygon id="hell-cat-mouth" points="23,37 29,37 26,43" fill="#ff5a1a" opacity="0"/>
+      <!-- Mischievous asymmetric smirk -->
+      <path d="M26,35.4 Q23,37.5 21.5,36.5" stroke="#7a0a00" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+      <path d="M26,35.4 Q30,38 33,37" stroke="#7a0a00" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+      <!-- Whiskers (ember orange) -->
+      <line x1="2" y1="32" x2="18" y2="34" stroke="#ff7a2e" stroke-width="0.8" opacity="0.85"/>
+      <line x1="2" y1="34.5" x2="18" y2="35.5" stroke="#ff7a2e" stroke-width="0.8" opacity="0.85"/>
+      <line x1="2" y1="37" x2="18" y2="36.5" stroke="#ff7a2e" stroke-width="0.8" opacity="0.7"/>
+      <line x1="34" y1="34" x2="50" y2="32" stroke="#ff7a2e" stroke-width="0.8" opacity="0.85"/>
+      <line x1="34" y1="35.5" x2="50" y2="34.5" stroke="#ff7a2e" stroke-width="0.8" opacity="0.85"/>
+      <line x1="34" y1="36.5" x2="50" y2="37" stroke="#ff7a2e" stroke-width="0.8" opacity="0.7"/>
+    </svg>
+  </div>
 </div>
 
 <!-- GLOBAL HINTS -->
@@ -395,41 +561,6 @@
         <div class="track-header">
           <span class="track-num">02</span>
           <span class="track-title">Golden Wind</span>
-          <div class="dice-wrap">
-            <div class="die" id="die1"><span id="dieVal1">3</span></div>
-            <div class="die" id="die2"><span id="dieVal2">5</span></div>
-          </div>
-        </div>
-        <div class="player" id="player2">
-          <audio id="audio2" src="2-golden-wind.mp3"></audio>
-          <div class="player-controls">
-            <button class="play-btn" onclick="togglePlay(2)" aria-label="Play">
-              <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-              <svg class="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-            </button>
-            <div class="progress-area">
-              <div class="progress-bar" id="bar2"><div class="progress-fill" id="fill2"></div><div class="progress-handle" id="handle2"></div></div>
-              <div class="time-row"><span class="time" id="cur2">0:00</span><span class="time" id="dur2">—:——</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="lyrics-card">
-          <button class="show-lyrics-btn" onclick="openLyricsView(2)" aria-label="show lyrics">Mostra lyrics</button>
-          <div class="eq-bars" id="eq2"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════ PAGE 4 — SONG 3: STARDUST CRUSADERS ═══════ -->
-    <div class="page" id="page4">
-      <div class="song-inner">
-        <div class="title-row">
-          <h1 class="title" data-text="LoveBet">LoveBet</h1>
-          <span class="vol-tag">vol. 3</span>
-        </div>
-        <div class="track-header">
-          <span class="track-num">03</span>
-          <span class="track-title">Stardust Crusaders</span>
           <div class="swirl-wrap">
             <div class="swirl-symbol" id="swirl1">
               <svg viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg">
@@ -477,6 +608,41 @@
             </div>
           </div>
         </div>
+        <div class="player" id="player2">
+          <audio id="audio2" src="2-golden-wind.mp3"></audio>
+          <div class="player-controls">
+            <button class="play-btn" onclick="togglePlay(2)" aria-label="Play">
+              <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+              <svg class="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+            <div class="progress-area">
+              <div class="progress-bar" id="bar2"><div class="progress-fill" id="fill2"></div><div class="progress-handle" id="handle2"></div></div>
+              <div class="time-row"><span class="time" id="cur2">0:00</span><span class="time" id="dur2">—:——</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="lyrics-card">
+          <button class="show-lyrics-btn" onclick="openLyricsView(2)" aria-label="show lyrics">Mostra lyrics</button>
+          <div class="eq-bars" id="eq2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ PAGE 4 — SONG 3: STARDUST CRUSADERS ═══════ -->
+    <div class="page" id="page4">
+      <div class="song-inner">
+        <div class="title-row">
+          <h1 class="title" data-text="LoveBet">LoveBet</h1>
+          <span class="vol-tag">vol. 3</span>
+        </div>
+        <div class="track-header">
+          <span class="track-num">03</span>
+          <span class="track-title">Stardust Crusaders</span>
+          <div class="dice-wrap">
+            <div class="die" id="die1"><span id="dieVal1">3</span></div>
+            <div class="die" id="die2"><span id="dieVal2">5</span></div>
+          </div>
+        </div>
         <div class="player" id="player3">
           <audio id="audio3" src="3-stardust-crusaders.mp3"></audio>
           <div class="player-controls">
@@ -504,6 +670,80 @@
         <div class="finale-line" id="finaleLine"></div>
         <p id="finale-text"></p>
         <p id="finale-sign"></p>
+
+        <!-- Flame: appears once the bow has finished wrapping -->
+        <p class="flame-prompt" id="flamePrompt">SE SEI PRONTA, PREMI PER L'ULTIMO ATTO</p>
+        <button class="flame-btn" id="flameBtn" type="button" aria-label="Ultimo atto">
+          <svg class="flame-svg" viewBox="0 0 64 96" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="flame-grad-outer" cx="50%" cy="80%" r="60%">
+                <stop offset="0%" stop-color="#fff4a3" stop-opacity="0.95"/>
+                <stop offset="35%" stop-color="#ff9a2e" stop-opacity="0.9"/>
+                <stop offset="75%" stop-color="#ff3b1a" stop-opacity="0.85"/>
+                <stop offset="100%" stop-color="#7a0a00" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="flame-grad-inner" cx="50%" cy="75%" r="55%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+                <stop offset="55%" stop-color="#ffd24d" stop-opacity="0.95"/>
+                <stop offset="100%" stop-color="#ff7a2e" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <!-- outer flame body -->
+            <path class="flame-outer" d="M32 92 C12 86 6 70 10 54 C13 42 22 36 22 24 C22 17 26 11 28 6 C30 13 34 18 38 24 C46 34 56 42 54 60 C52 78 46 88 32 92 Z" fill="url(#flame-grad-outer)"/>
+            <!-- inner flame -->
+            <path class="flame-inner" d="M32 86 C22 82 18 72 22 60 C25 50 30 46 30 36 C30 28 31 22 33 16 C35 22 38 28 40 34 C45 44 48 54 46 64 C44 76 40 84 32 86 Z" fill="url(#flame-grad-inner)"/>
+            <!-- core highlight -->
+            <ellipse class="flame-core" cx="32" cy="72" rx="6" ry="10" fill="#fff" opacity="0.85"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════ PAGE 6 — SONG 4: GIVE YOURSELF TO ME ═══════ -->
+    <div class="page page-hell" id="page6">
+      <!-- Infernal flowers — same layout as #bg-flowers, swapped to ember palette -->
+      <div class="hell-flowers" aria-hidden="true">
+        <div class="flower flower-orange-tl"><svg viewBox="0 0 180 280" fill="none" stroke="#ff7a2e" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M90 280 C90 240 88 200 90 155"/><path d="M90 240 C70 228 52 215 44 196 C62 200 78 214 90 240"/><path d="M90 220 C112 208 130 195 136 175 C118 180 102 194 90 220"/><path d="M90 190 C72 180 58 166 54 148 C68 152 82 166 90 190"/><path d="M90 240 C74 230 58 220 48 208" stroke-width="0.6" opacity="0.5"/><path d="M90 220 C106 212 122 202 132 190" stroke-width="0.6" opacity="0.5"/><path d="M90 155 C78 140 68 118 72 95 C80 108 86 132 90 155"/><path d="M90 155 C102 140 112 118 108 95 C100 108 94 132 90 155"/><path d="M90 155 C72 148 52 150 40 138 C54 132 74 138 90 155"/><path d="M90 155 C108 148 128 150 140 138 C126 132 106 138 90 155"/><path d="M90 155 C76 164 62 176 64 196 C74 186 84 170 90 155"/><path d="M90 155 C104 164 118 176 116 196 C106 186 96 170 90 155"/><line x1="90" y1="148" x2="82" y2="128"/><line x1="90" y1="148" x2="88" y2="126"/><line x1="90" y1="148" x2="90" y2="125"/><line x1="90" y1="148" x2="92" y2="126"/><line x1="90" y1="148" x2="98" y2="128"/><ellipse cx="82" cy="126" rx="3" ry="1.5" transform="rotate(-20 82 126)" fill="#ff7a2e" stroke="none"/><ellipse cx="88" cy="124" rx="3" ry="1.5" transform="rotate(-5 88 124)" fill="#ff7a2e" stroke="none"/><ellipse cx="90" cy="123" rx="3" ry="1.5" fill="#ff7a2e" stroke="none"/><ellipse cx="92" cy="124" rx="3" ry="1.5" transform="rotate(5 92 124)" fill="#ff7a2e" stroke="none"/><ellipse cx="98" cy="126" rx="3" ry="1.5" transform="rotate(20 98 126)" fill="#ff7a2e" stroke="none"/><circle cx="80" cy="142" r="1.2" fill="#ff7a2e" stroke="none" opacity="0.7"/><circle cx="76" cy="148" r="1" fill="#ff7a2e" stroke="none" opacity="0.7"/><circle cx="100" cy="142" r="1.2" fill="#ff7a2e" stroke="none" opacity="0.7"/><circle cx="104" cy="148" r="1" fill="#ff7a2e" stroke="none" opacity="0.7"/></svg></div>
+        <div class="flower flower-red-br"><svg viewBox="0 0 260 300" fill="none" stroke="#c81a00" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M20 300 C40 260 60 220 90 180 C110 155 130 140 130 120"/><path d="M90 180 C110 175 130 165 155 150"/><path d="M110 210 C125 200 145 195 165 185"/><path d="M130 120 C118 105 112 85 118 65 C124 75 128 95 130 120"/><path d="M130 120 C142 105 148 85 142 65 C136 75 132 95 130 120"/><path d="M130 120 C112 112 92 112 78 100 C90 94 112 100 130 120"/><path d="M130 120 C148 112 168 112 182 100 C170 94 148 100 130 120"/><path d="M130 120 C115 130 108 148 114 165 C122 155 128 138 130 120"/><path d="M130 120 C145 130 152 148 146 165 C138 155 132 138 130 120"/><line x1="130" y1="120" x2="127" y2="110"/><line x1="130" y1="120" x2="130" y2="108"/><line x1="130" y1="120" x2="133" y2="110"/><circle cx="127" cy="109" r="1.5" fill="#c81a00"/><circle cx="130" cy="107" r="1.5" fill="#c81a00"/><circle cx="133" cy="109" r="1.5" fill="#c81a00"/><path d="M155 150 C145 138 140 120 146 104 C151 113 154 132 155 150"/><path d="M155 150 C165 138 170 120 164 104 C159 113 156 132 155 150"/><path d="M155 150 C140 144 124 146 114 136 C124 130 142 136 155 150"/><path d="M155 150 C170 144 186 146 196 136 C186 130 168 136 155 150"/><path d="M165 185 C160 177 158 165 162 155 C165 161 166 173 165 185"/><path d="M165 185 C170 177 172 165 168 155 C165 161 164 173 165 185"/><path d="M90 180 C82 165 84 145 96 135 C96 148 92 165 90 180"/><path d="M90 180 C100 168 104 150 98 138 C95 150 92 165 90 180"/></svg></div>
+        <div class="flower flower-gold-c"><svg viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ffd24d" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M110 260 C108 200 106 160 110 120"/><path d="M110 200 C80 185 40 190 20 170 C50 165 80 172 110 185"/><path d="M110 190 C140 175 180 180 200 158 C170 155 140 162 110 178"/><path d="M110 160 C85 145 55 148 38 130 C62 128 88 136 110 150"/><path d="M110 200 C90 190 60 188 40 182" stroke-width="0.6" opacity="0.5"/><path d="M110 190 C130 182 158 180 178 172" stroke-width="0.6" opacity="0.5"/><circle cx="110" cy="100" r="18"/><circle cx="110" cy="100" r="12"/><line x1="110" y1="82" x2="110" y2="74"/><line x1="118" y1="84" x2="123" y2="77"/><line x1="124" y1="91" x2="131" y2="88"/><line x1="126" y1="100" x2="134" y2="100"/><line x1="124" y1="109" x2="131" y2="113"/><line x1="118" y1="116" x2="123" y2="123"/><line x1="110" y1="118" x2="110" y2="126"/><line x1="102" y1="116" x2="97" y2="123"/><line x1="96" y1="109" x2="89" y2="113"/><line x1="94" y1="100" x2="86" y2="100"/><line x1="96" y1="91" x2="89" y2="88"/><line x1="102" y1="84" x2="97" y2="77"/><circle cx="88" cy="78" r="13"/><circle cx="88" cy="78" r="8"/><line x1="88" y1="65" x2="88" y2="59"/><line x1="97" y1="67" x2="101" y2="62"/><line x1="101" y1="75" x2="106" y2="73"/><line x1="101" y1="82" x2="106" y2="85"/><line x1="95" y1="88" x2="98" y2="93"/><line x1="88" y1="91" x2="88" y2="97"/><line x1="81" y1="88" x2="78" y2="93"/><line x1="75" y1="82" x2="70" y2="85"/><line x1="75" y1="75" x2="70" y2="73"/><line x1="79" y1="67" x2="75" y2="62"/></svg></div>
+      </div>
+
+      <div class="song-inner">
+        <div class="title-row">
+          <h1 class="title" data-text="LoveBet">LoveBet</h1>
+          <span class="vol-tag">vol. 4</span>
+        </div>
+        <div class="track-header">
+          <span class="track-num">04</span>
+          <span class="track-title">Give Yourself to Me</span>
+          <div class="song-flames-wrap">
+            <svg class="song-flame" viewBox="0 0 32 48" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 47 C5 43 2 33 5 24 C7 16 13 13 13 6 C13 3 14 1 16 0 C17 3 19 6 21 9 C25 16 28 22 27 31 C26 40 22 45 16 47 Z" fill="url(#flame-grad-outer)"/>
+              <path d="M16 43 C9 40 7 32 10 25 C12 19 15 17 15 11 C15 8 16 5 16 4 C17 7 18 10 19 13 C23 19 22 26 21 32 C20 38 18 41 16 43 Z" fill="url(#flame-grad-inner)"/>
+            </svg>
+            <svg class="song-flame song-flame-2" viewBox="0 0 32 48" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 47 C5 43 2 33 5 24 C7 16 13 13 13 6 C13 3 14 1 16 0 C17 3 19 6 21 9 C25 16 28 22 27 31 C26 40 22 45 16 47 Z" fill="url(#flame-grad-outer)"/>
+              <path d="M16 43 C9 40 7 32 10 25 C12 19 15 17 15 11 C15 8 16 5 16 4 C17 7 18 10 19 13 C23 19 22 26 21 32 C20 38 18 41 16 43 Z" fill="url(#flame-grad-inner)"/>
+            </svg>
+          </div>
+        </div>
+        <div class="player" id="player4">
+          <audio id="audio4" src="4-give-yourself-to-me.mp3"></audio>
+          <div class="player-controls">
+            <button class="play-btn" onclick="togglePlay(4)" aria-label="Play">
+              <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+              <svg class="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+            <div class="progress-area">
+              <div class="progress-bar" id="bar4"><div class="progress-fill" id="fill4"></div><div class="progress-handle" id="handle4"></div></div>
+              <div class="time-row"><span class="time" id="cur4">0:00</span><span class="time" id="dur4">—:——</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="lyrics-card">
+          <button class="show-lyrics-btn" onclick="openLyricsView(4)" aria-label="show lyrics">Mostra lyrics</button>
+          <div class="eq-bars" id="eq4"></div>
+        </div>
       </div>
     </div>
 
@@ -517,7 +757,7 @@
       <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <span class="lv-title" id="lvTitle">—</span>
-    <span class="lv-lang">IT</span>
+    <button class="lv-lang" id="lvLang" onclick="toggleLyricsLang()" aria-label="toggle language">IT</button>
   </div>
   <div class="lv-body" id="lvBody"></div>
   <div class="lv-player">
@@ -532,14 +772,35 @@
   </div>
 </div>
 
+<!-- FIRE TRANSITION — flame click ignites this overlay before snapping to song 4 -->
+<div id="fire-transition" aria-hidden="true">
+  <div class="fire-layer fire-base"></div>
+  <div class="fire-layer fire-flicker"></div>
+  <div class="fire-layer fire-embers">
+    <span class="ember" style="left:6%;animation-delay:0ms"></span>
+    <span class="ember" style="left:13%;animation-delay:140ms"></span>
+    <span class="ember" style="left:21%;animation-delay:60ms"></span>
+    <span class="ember" style="left:29%;animation-delay:220ms"></span>
+    <span class="ember" style="left:36%;animation-delay:90ms"></span>
+    <span class="ember" style="left:44%;animation-delay:300ms"></span>
+    <span class="ember" style="left:52%;animation-delay:30ms"></span>
+    <span class="ember" style="left:59%;animation-delay:180ms"></span>
+    <span class="ember" style="left:67%;animation-delay:110ms"></span>
+    <span class="ember" style="left:74%;animation-delay:260ms"></span>
+    <span class="ember" style="left:82%;animation-delay:50ms"></span>
+    <span class="ember" style="left:90%;animation-delay:200ms"></span>
+  </div>
+</div>
+
 <script>
 // ════ DEDICA ════
 const DEDICA = [
-  `Ci sono state tanti <span class="glow-pink">momenti</span>, tante versioni, tante <span class="glow-cyan">emozioni diverse</span>, e in fin dei conti volevo solo <span class="glow-yellow">creare qualcosa</span> con quei sentimenti.`,
-  `Il mio percorso, la mia <span class="glow-pink">voglia</span>, i miei desideri, il <span class="glow-cyan">dolore</span>, la <span class="glow-yellow">gioia</span>, la speranza e... l'<span class="glow-pink">amore</span>.`,
-  `Se anche solo una piccola parte di te volesse <span class="glow-cyan">ascoltare</span>, mi piacerebbe raccontarti una <span class="glow-yellow">storia</span>.`,
-  `Una storia che parla di <span class="glow-cyan">te, di me, di noi</span>, nel passato, nel <span class="glow-pink">futuro</span>, qui e ora, ma anche ovunque e in <span class="glow-yellow">mille dimensioni lontane</span>.`,
-  `E di una <span class="glow-pink">scommessa</span>.<br><span class="glow-yellow" style="font-size:clamp(20px,5vw,26px);">La mia...</span>`
+  `Ho vissuto tanti <span class="glow-pink">momenti</span>, ho visto tante <span class="glow-cyan">versioni di noi</span> e provato emozioni diverse.<br>E, alla fine, volevo solo <span class="glow-yellow">creare qualcosa</span> che raccogliesse tutto questo.`,
+  `Il mio percorso, la mia <span class="glow-pink">voglia</span>, i miei desideri.<br>Il <span class="glow-cyan">dolore</span>, la <span class="glow-yellow">gioia</span>, la speranza, la fede… e l'<span class="glow-pink">amore</span>.`,
+  `Alla parte di te che <span class="glow-cyan">non se n'è mai andata</span>,<br>e a quella che invece è <span class="glow-yellow">appena tornata</span>,<br>vorrei raccontare una <span class="glow-pink">storia</span>.`,
+  `Una storia che parla di <span class="glow-cyan">te, di me, di noi</span>.<br>Di quello che <span class="glow-yellow">siamo stati</span>, di quello che saremo,<br>e di ciò che siamo <span class="glow-pink">qui e ora</span>…`,
+  `Ma anche di ciò che <span class="glow-cyan">potremmo essere</span>, <span class="glow-yellow">ovunque</span>,<br>in <span class="glow-pink">mille dimensioni lontane</span>.`,
+  `E di una <span class="glow-pink">scommessa</span>.<br><span class="glow-yellow" style="font-size:clamp(20px,5vw,26px);">La mia…</span>`
 ];
 const TOTAL = DEDICA.length;
 const dedicaEl  = document.getElementById('dedica-text');
@@ -566,6 +827,10 @@ function buildThreadPath() {
   threadSvg.setAttribute('viewBox', `0 0 ${w} ${H}`);
   threadSvg.setAttribute('width', w);
   threadSvg.setAttribute('height', H);
+  // Lock rendered SVG box to the same metric as the viewBox so preserveAspectRatio="none"
+  // can't stretch the path. Required on mobile where 100vh ≠ window.innerHeight (URL bar).
+  threadSvg.style.width  = w + 'px';
+  threadSvg.style.height = H + 'px';
 
   const inset = 6;
   const cx = w / 2;
@@ -678,6 +943,13 @@ function rebuildThreadOnResize() {
 
 function advanceThreadTo(page) {
   if (!threadActive) return;
+  // Thread covers pages 0..4 (landing → finale knot). Page 5 (song 4 / hellish) lives below it.
+  if (page >= SEG_DURATIONS.length) {
+    // Past the thread's last segment → just hold the fully-advanced state
+    stopThreadAnimation();
+    setThreadOffset(1);
+    return;
+  }
   if (page > threadPageReached) {
     // FORWARD — snap previous segment to completion, then animate new
     stopThreadAnimation();
@@ -706,6 +978,21 @@ function triggerYawn(cb) {
   catInner.classList.add('yawning');
   setTimeout(() => { catInner.classList.remove('yawning'); catBusy = false; if (cb) cb(); }, 680);
 }
+
+// Hell-cat — same yawn mechanic, separate state so it doesn't interfere with the regular cat
+const hellCatWrap = document.getElementById('hell-cat-wrap');
+const hellCatInner = document.getElementById('hell-cat-inner');
+let hellCatBusy = false;
+function triggerHellYawn() {
+  if (hellCatBusy) return;
+  hellCatBusy = true;
+  hellCatInner.classList.remove('yawning');
+  void hellCatInner.offsetWidth;
+  hellCatInner.classList.add('yawning');
+  setTimeout(() => { hellCatInner.classList.remove('yawning'); hellCatBusy = false; }, 680);
+}
+hellCatWrap.addEventListener('click', triggerHellYawn);
+function setHellCatVisible(visible) { hellCatWrap.classList.toggle('visible', visible); }
 
 catWrap.addEventListener('click', () => {
   if (catWrap.classList.contains('cat-hidden')) return;
@@ -814,9 +1101,9 @@ setTimeout(() => {
   document.getElementById('gate-hint').style.opacity = '1';
   setTimeout(() => digits[0].focus(), 400);
 }, tDelay + 200);
-document.getElementById('gate-hint').textContent = '運命の赤い糸';
+document.getElementById('gate-hint').textContent = 'Our new beginning - a.k.a. - La festa più swag.';
 
-const PASSWORD = '3110';
+const PASSWORD = '2504';
 const gate = document.getElementById('gate');
 const digits = [document.getElementById('d1'), document.getElementById('d2'), document.getElementById('d3'), document.getElementById('d4')];
 const errorEl = document.getElementById('gate-error');
@@ -871,14 +1158,22 @@ function canSwipeDown() { return slide === TOTAL - 1; }
 // 2 -> 1, 2 -> 3 (free)
 // 3 -> 2 (free)
 // 1 -> 0 BLOCKED FOREVER
-function canGoTo(target) {
-  if (target < 0 || target > 4) return false;
+// 4 -> 5 ONLY via flame click (opts.fromFlame)
+// 5 -> 4 (free, swipe up)
+function canGoTo(target, opts = {}) {
+  if (target < 0 || target > 5) return false;
   if (target === currentPage) return false;
   if (Math.abs(target - currentPage) !== 1) return false; // only adjacent
   // Block 1 -> 0
   if (currentPage === 1 && target === 0) return false;
   // Page 0 -> 1 requires dedica complete
   if (currentPage === 0 && target === 1 && !canSwipeDown()) return false;
+  // Page 4 (finale) is a one-way checkpoint — no swipe back to song 3
+  if (currentPage === 4 && target === 3) return false;
+  // Page 4 (finale) -> 5 (song 4) only via the flame button
+  if (currentPage === 4 && target === 5 && !opts.fromFlame) return false;
+  // Page 5 (Song 4 / hellish) is a parallel dimension — one-way, no return
+  if (currentPage === 5) return false;
   return true;
 }
 
@@ -895,9 +1190,9 @@ function updatePageHints() {
   } else if (currentPage === 3) {
     hintUpGlobal.classList.add('visible');
     hintDownGlobal.classList.add('visible');
-  } else if (currentPage === 4) {
-    hintUpGlobal.classList.add('visible');
   }
+  // Page 4 (finale): one-way checkpoint — no swipe up to song 3, only the flame leads forward
+  // Page 5 (Song 4):  parallel dimension — no hints, no way out
 }
 
 function setCatVisible(visible) {
@@ -905,26 +1200,47 @@ function setCatVisible(visible) {
   else catWrap.classList.add('cat-hidden');
 }
 
-function goToPage(idx) {
+const PAGE_COUNT = 6;
+const PAGE_STEP_PCT = 100 / PAGE_COUNT; // 16.6667%
+function goToPage(idx, opts = {}) {
   if (transitioning) return;
-  if (!canGoTo(idx)) return;
+  if (!canGoTo(idx, opts)) return;
   transitioning = true;
   lastNavTime = Date.now();
   const prev = currentPage;
   currentPage = idx;
-  pagesWrapper.style.transform = `translateY(-${idx * 20}%)`;
+  if (opts.instant) {
+    // Snap with no visual scroll (the fire transition covers the change)
+    pagesWrapper.style.transition = 'none';
+    pagesWrapper.style.transform = `translateY(-${idx * PAGE_STEP_PCT}%)`;
+    void pagesWrapper.offsetHeight; // force reflow
+    pagesWrapper.style.transition = '';
+  } else {
+    pagesWrapper.style.transform = `translateY(-${idx * PAGE_STEP_PCT}%)`;
+  }
 
-  // Cat visibility — always visible once it's in the corner; hidden only when lyrics overlay is open
-  setCatVisible(lyricsViewSong === null);
+  // Cat visibility — regular cat hidden on song 4; hell cat appears only on song 4
+  const overlayClosed = lyricsViewSong === null;
+  setCatVisible(overlayClosed && idx !== 5);
+  setHellCatVisible(overlayClosed && idx === 5);
+
+  // Toggle hellish background — swaps cyberpunk flowers for the ember set
+  document.body.classList.toggle('on-hell', idx === 5);
 
   // Red thread — always visible, advances on each new page
   advanceThreadTo(idx);
 
   // Audio handling
+  if (idx > 0) stopIntro(); // leaving the gate/landing — fade out the intro track
   if (idx === 1) { setTimeout(() => playSong(1), 400); }
   else if (idx === 2) { setTimeout(() => playSong(2), 400); }
   else if (idx === 3) { setTimeout(() => playSong(3), 400); }
+  else if (idx === 5) { setTimeout(() => playSong(4), 400); }
   else { stopAllAudio(); }
+
+  // Finale ambience (heavenly-demon) — only on the finale page
+  if (idx === 4) startFinaleAmbience();
+  else if (prev === 4) stopFinaleAmbience();
 
   // Page 5 (finale) reveal
   if (idx === 4) {
@@ -941,8 +1257,11 @@ function goToPage(idx) {
 const finaleLine = document.getElementById('finaleLine');
 const finaleText = document.getElementById('finale-text');
 const finaleSign = document.getElementById('finale-sign');
+const flamePromptEl = document.getElementById('flamePrompt');
+const flameBtnEl = document.getElementById('flameBtn');
 const FINALE_TEXT = `I hope you'll be my Valentine forever!`;
 const SIGN_TEXT = `DA MATTIA`;
+const FLAME_IGNITION_DELAY_MS = 5800; // bow finishes wrapping at SEG_DURATIONS[4] = 5500ms
 let finaleInked = false;
 let finaleTimeouts = []; // pending setTimeout ids — cleared on reset to prevent stale animations
 
@@ -951,6 +1270,8 @@ function resetFinale() {
   finaleTimeouts.forEach(id => clearTimeout(id));
   finaleTimeouts = [];
   finaleLine.classList.remove('in');
+  flamePromptEl.classList.remove('in');
+  flameBtnEl.classList.remove('in');
   if (finaleInked) {
     finaleText.querySelectorAll('.ink-word').forEach(w => w.classList.remove('in'));
     finaleSign.querySelectorAll('.ink-letter').forEach(l => l.classList.remove('in'));
@@ -987,6 +1308,74 @@ function revealFinale() {
   letters.forEach((l, i) => {
     finaleTimeouts.push(setTimeout(() => l.classList.add('in'), letterStart + i * 90));
   });
+  // Flame ignition: prompt fades in, then the flame grows from a tiny ember
+  finaleTimeouts.push(setTimeout(() => flamePromptEl.classList.add('in'), FLAME_IGNITION_DELAY_MS));
+  finaleTimeouts.push(setTimeout(() => flameBtnEl.classList.add('in'), FLAME_IGNITION_DELAY_MS + 350));
+}
+
+// Flame click → ignite fire transition, then snap to song 4 (parallel dimension)
+const fireEl = document.getElementById('fire-transition');
+let fireRunning = false;
+
+function fireTransitionToSong4() {
+  if (fireRunning) return;
+  fireRunning = true;
+  // Origin: center of the flame button, expressed as % of the viewport
+  const r = flameBtnEl.getBoundingClientRect();
+  const cx = ((r.left + r.width / 2) / window.innerWidth) * 100;
+  const cy = ((r.top + r.height / 2) / window.innerHeight) * 100;
+  fireEl.style.setProperty('--fire-x', cx + '%');
+  fireEl.style.setProperty('--fire-y', cy + '%');
+
+  // Phase 1 — ignite + expand to fill the screen (≈550ms)
+  fireEl.classList.add('active');
+  requestAnimationFrame(() => fireEl.classList.add('expand'));
+
+  // Phase 2 — at peak coverage, snap pages-wrapper to song 4 instantly
+  setTimeout(() => { goToPage(5, { fromFlame: true, instant: true }); }, 580);
+
+  // Phase 3 — dissolve fire to reveal song 4 underneath
+  setTimeout(() => fireEl.classList.add('dissolve'), 820);
+
+  // Phase 4 — cleanup classes
+  setTimeout(() => {
+    fireEl.classList.remove('active', 'expand', 'dissolve');
+    fireRunning = false;
+  }, 1380);
+}
+
+flameBtnEl.addEventListener('click', () => {
+  if (!flameBtnEl.classList.contains('in')) return; // not yet ignited
+  fireTransitionToSong4();
+});
+
+// ════ FINALE AMBIENCE (heavenly-demon) ════
+// Plays on the finale page (idx 4), the "checkpoint" between song 3 and song 4.
+// Sets the infernal mood; fades out as the fire transition takes over.
+const audioFinale = document.getElementById('audioFinale');
+const FINALE_VOLUME = 0.55;
+const FINALE_FADE_MS = 500;
+let finaleFadeRaf = null;
+
+function startFinaleAmbience() {
+  if (finaleFadeRaf) { cancelAnimationFrame(finaleFadeRaf); finaleFadeRaf = null; }
+  audioFinale.currentTime = 0;
+  audioFinale.volume = FINALE_VOLUME;
+  audioFinale.play().catch(() => {});
+}
+
+function stopFinaleAmbience() {
+  if (finaleFadeRaf) { cancelAnimationFrame(finaleFadeRaf); finaleFadeRaf = null; }
+  if (audioFinale.paused) { audioFinale.currentTime = 0; return; }
+  const startVol = audioFinale.volume;
+  const t0 = performance.now();
+  const fade = () => {
+    const k = Math.min(1, (performance.now() - t0) / FINALE_FADE_MS);
+    audioFinale.volume = startVol * (1 - k);
+    if (k < 1) finaleFadeRaf = requestAnimationFrame(fade);
+    else { audioFinale.pause(); audioFinale.currentTime = 0; audioFinale.volume = startVol; finaleFadeRaf = null; }
+  };
+  finaleFadeRaf = requestAnimationFrame(fade);
 }
 
 // ════ KEYBOARD ════
@@ -1064,13 +1453,54 @@ function startFlicker() { glowQ = shuffle(getGlowEls()); if (!flickerTimer) flic
 function rehookFlicker() { glowQ = shuffle(getGlowEls()); }
 
 // ════ AUDIO ════
-const audios = { 1: document.getElementById('audio1'), 2: document.getElementById('audio2'), 3: document.getElementById('audio3') };
+const audios = { 1: document.getElementById('audio1'), 2: document.getElementById('audio2'), 3: document.getElementById('audio3'), 4: document.getElementById('audio4') };
+const SONG_INDEXES = [1, 2, 3, 4];
 let current = null;
+
+// ── Intro track (page 0 / gate) ─────────────────────────────────────────────
+// Plays in loop from page load until the user reaches song 1.
+// Browsers block sound autoplay until the first user gesture, so we both try
+// immediately and arm a one-shot first-interaction listener as a fallback.
+const audio0 = document.getElementById('audio0');
+const INTRO_VOLUME = 0.6;
+const INTRO_FADE_MS = 600;
+let introStarted = false;
+let introStopped = false;
+let introFadeRaf = null;
+
+function startIntro() {
+  if (introStarted || introStopped) return;
+  audio0.volume = INTRO_VOLUME;
+  audio0.play().then(() => { introStarted = true; }).catch(() => { /* still blocked, will retry on next interaction */ });
+}
+
+function stopIntro() {
+  if (introStopped) return;
+  introStopped = true;
+  if (introFadeRaf) cancelAnimationFrame(introFadeRaf);
+  if (audio0.paused) { audio0.currentTime = 0; return; }
+  const startVol = audio0.volume;
+  const t0 = performance.now();
+  const fade = () => {
+    const k = Math.min(1, (performance.now() - t0) / INTRO_FADE_MS);
+    audio0.volume = startVol * (1 - k);
+    if (k < 1) introFadeRaf = requestAnimationFrame(fade);
+    else { audio0.pause(); audio0.currentTime = 0; audio0.volume = startVol; introFadeRaf = null; }
+  };
+  introFadeRaf = requestAnimationFrame(fade);
+}
+
+// Try optimistic autoplay (most browsers will reject until a gesture)
+audio0.play().then(() => { introStarted = true; audio0.volume = INTRO_VOLUME; }).catch(() => {});
+// First-interaction fallback
+['pointerdown', 'touchstart', 'keydown', 'focusin'].forEach(ev => {
+  document.addEventListener(ev, startIntro, { passive: true });
+});
 
 function fmt(s) { if (isNaN(s)) return '—:——'; return `${Math.floor(s / 60)}:${Math.floor(s % 60).toString().padStart(2, '0')}`; }
 
 function stopAllAudio() {
-  [1, 2, 3].forEach(n => {
+  SONG_INDEXES.forEach(n => {
     audios[n].pause();
     document.querySelector(`#player${n} .play-btn`).classList.remove('playing');
   });
@@ -1080,7 +1510,7 @@ function stopAllAudio() {
 function playSong(n) {
   ensureAudioRunning().then(() => {
     // Pause all others
-    [1, 2, 3].forEach(k => {
+    SONG_INDEXES.forEach(k => {
       if (k !== n) {
         audios[k].pause();
         audios[k].currentTime = 0;
@@ -1103,7 +1533,7 @@ function togglePlay(n) {
   } else { a.pause(); b.classList.remove('playing'); current = null; }
 }
 
-[1, 2, 3].forEach(n => {
+SONG_INDEXES.forEach(n => {
   const bar = document.getElementById(`bar${n}`), a = audios[n];
   let sk = false;
   const st = cx => { const r = bar.getBoundingClientRect(); if (a.duration) a.currentTime = Math.min(Math.max((cx - r.left) / r.width, 0), 1) * a.duration; };
@@ -1113,7 +1543,7 @@ function togglePlay(n) {
   bar.addEventListener('pointercancel', () => { sk = false; bar.style.cursor = ''; document.getElementById(`handle${n}`).style.opacity = ''; });
 });
 
-[1, 2, 3].forEach(n => {
+SONG_INDEXES.forEach(n => {
   const a = audios[n];
   a.addEventListener('timeupdate', () => {
     const p = a.duration ? (a.currentTime / a.duration) * 100 : 0;
@@ -1133,7 +1563,7 @@ function togglePlay(n) {
 });
 
 // ════ LYRICS / TRACKS ════
-const TRACK_TITLES = { 1: 'Crazy Diamond', 2: 'Golden Wind', 3: 'Stardust Crusaders' };
+const TRACK_TITLES = { 1: 'Crazy Diamond', 2: 'Golden Wind', 3: 'Stardust Crusaders', 4: 'Give Yourself to Me' };
 
 const LYRICS_TEXT = {
   1: `I still see that river when I close my eyes
@@ -1278,6 +1708,275 @@ That was enough.
 
 They didn't fall in love again.
 They finally built it.`,
+  4: `You push, I pull, we circle like a fire,
+Two stubborn hearts dancing on a wire.
+You want control but you crave my touch,
+I want your surrender, but only if you want it just as much.
+
+You step to me slow, eyes sharp like a blade,
+Every look you throw says you're not afraid.
+Your fingers on my collar tug me into your space,
+Daring me to meet you breath for breath, face to face.
+You whisper that you don't break easy, neither do I,
+But we both feel the tension rising each time we try.
+
+You grab my wrist like you're pulling me in,
+I pin your hips, feel the heat beneath your skin.
+You want the upper hand but you arch when I tease,
+Your body giving answers your mouth won't release.
+
+Give yourself to me like I'm giving you me,
+Not owned, not chained, just wild and free.
+Let the push and pull take us where we both ache,
+Two strong hearts learning how to bend, not break.
+If you want the power, take it slow, take it deep,
+Let the rhythm drag us under till neither of us can speak.
+
+You press me to the wall, lips grazing my throat,
+A soft little threat wrapped in a hungry note.
+I slide my hands lower and you fight for air,
+Your voice cracks once and you pretend you don't care.
+You say you want to win but your body gives clues,
+Leaning into every touch like you're begging me to choose.
+
+You try to lead but I shift and take control,
+Your breath stutters when I touch your soul.
+You meet my pace, matching everything I do,
+A perfect storm pulling us both straight through.
+
+Give yourself to me like I'm giving you me,
+Not owned, not chained, just wild and free.
+Let the push and pull take us where we both ache,
+Two strong hearts learning how to bend, not break.
+If you want the power, take it slow, take it deep,
+Let the rhythm drag us under till neither of us can speak.
+
+Your nails at my back, tear a wanted design,
+You whisper surrender but it mixes with mine.
+We fight for control but we melt all the same,
+Two stubborn souls losing track of the game.
+I don't want to own you, that isn't the key,
+I want you to want to fall into me.
+
+Give yourself to me like I'm giving you me,
+Let the tension crash and set us both free.
+Every kiss, every breath, every shake of your voice,
+Feels like two forces finally making one choice.
+No crowns, no thrones, just the truth that we feel,
+You give yourself to me and I give myself for real.
+
+A fire demon meeting a flame,
+A sacred fire, finding its holy place.
+I know once it hits I'll never want to leave,
+I've spent an eternity waiting for your type of peace.`,
+};
+
+const LYRICS_IT_TEXT = {
+  1: `Vedo ancora quel fiume quando chiudo gli occhi.
+Ridevi per niente, con i capelli ancora bagnati.
+Il pomeriggio si piegava, come se non avesse fretta di finire.
+Anche la luce sembrava seguirti ovunque.
+Sei arrivata così, senza preavviso, senza spiegazioni.
+Non hai chiesto il permesso, hai sempre saputo tutto prima di me.
+C'erano cose che continuavo a voler dire ad alta voce,
+Ma quasi tutte si perdevano mentre provavo a spingerle fuori.
+
+Continuo a giraci intorno nel buio,
+Cercando il punto esatto in cui ti ho persa,
+O in cui tu hai perso me.
+Non ne sono nemmeno più sicuro.
+
+Non sono pronto a dire "sia quel che sia",
+Ho visto come combatti ciò che provava a spezzarti,
+E lo so che sono diventato pesante,
+Lo so che ho fatto crollare il cielo.
+Ma sono ancora qui,
+Cercando di essere all'altezza del sole che ti porti dentro.
+
+Ogni volta che entravi in una stanza dimenticavo tutta la pesantezza.
+Era il modo in cui ti muovevi, come se quello spazio fosse già tuo,
+Quel sorriso lento ancora prima di arrivare da me.
+Vivo in quell'istante da allora.
+Non sei mai stata una che resta dove fa male,
+Hai preso tutto quello che la vita ti ha lanciato
+E lo hai indossato come prova di forza.
+Ho paura di essere l'unica cosa che non riuscirai a capire,
+Ed è il nodo che non riesco a sciogliere.
+
+Alcune notti lo sento, forte e crudele:
+"Stai perdendo la tua luce
+Per colpa di un'oscurità che non sai nemmeno nominare."
+E odio il fatto che non sia del tutto sbagliato.
+
+Non sono pronto a dire "sia quel che sia",
+Ho visto come combatti ciò che provava a spezzarti,
+E lo so che sono diventato pesante,
+Lo so che ho fatto crollare il cielo.
+Ma sono ancora qui,
+Cercando di essere all'altezza del sole che ti porti dentro.
+
+Non ho mai voluto farti soffrire,
+Volevo solo essere il posto in cui ti sentivi al sicuro tornando a casa.
+Credo ancora di poterlo essere.
+Immagino sia l'unica scommessa che vale la pena fare.
+
+Vedo ancora il nostro divano quando cala il silenzio,
+Tu dopo cena, senza dire molto,
+Qualcosa di piccolo accoccolato su di te, che respirava piano.
+Perfino i più piccoli sapevano dov'era casa.
+Questo è quello che so.
+Questo è quello che non lascerò andare.`,
+  2: `Sono cresciuto da solo nella mia gabbia immaginaria.
+Ho cucinato per uno, ho pianto nel sonno.
+Senza una mappa, senza voce dall'altra parte,
+Imparavo solo a capire per cosa il mio petto stava facendo spazio.
+
+Spaventato e solo, ho affrontato le mie debolezze, ho tenuto viva la scintilla.
+Sono guarito da solo, ridendo per uscire dal buio.
+
+So cosa ho costruito e quanto mi è costato.
+Ho rifatto tutto il percorso da capo.
+Pensavo che ogni mattone fosse solo mio,
+Poi ho scoperto che, dopotutto, avevo lasciato una porta aperta.
+Quindi credimi quando dico: non ho bisogno di te.
+Ma ti voglio da impazzire.
+
+Vento dorato. Nessun fantasma alle spalle.
+
+Sei la domanda che non avevo capito?
+O la risposta che continuavo a rimandare?
+Ogni strada che ho preso per trovare me stesso
+Portava il tuo nome da qualche parte lungo il cammino.
+
+Potrei rifare tutto da solo, lo so come funziona.
+Ma ti voglio lì quando i muri cadono,
+quando cala il silenzio, quando tutto si vede davvero.
+Presente, lucido, senza difese.
+Ingenuamente, completamente dentro.
+Non voglio un testimone. Voglio casa.
+E voglio che ci sia tu con me.
+
+Spaventato e solo, ho affrontato le mie debolezze, ho tenuto viva la scintilla.
+Sono guarito da solo, ridendo per uscire dal buio.
+
+So cosa ho costruito e quanto mi è costato.
+Ho rifatto tutto il percorso da capo.
+Pensavo che ogni mattone fosse solo mio,
+Poi ho scoperto che, dopotutto, avevo lasciato una porta aperta.
+Quindi credimi quando dico: non ho bisogno di te.
+Ma ti voglio da impazzire.
+
+Conosco il peso di fare tutto da soli,
+ma non ho mai chiamato "casa" un posto vuoto.
+Ora la gabbia non c'è più, la tavola è apparecchiata per due.
+Non perché avessi bisogno di qualcuno,
+Ma perché voglio che sia tu.`,
+  3: `Lei ci teneva. Lui si è spaventato.
+Lei si è innamorata. Lui pure.
+Si sono abituati, si sono adagiati —
+Ma qualcosa dentro si è rotto, troppo piano per accorgersene.
+Lei non trovava le parole. Lui fraintendeva il silenzio.
+Lui si chiudeva. Lei si perdeva nei suoi pensieri.
+E tutto quello che volevano dirsi… è rimasto lì, mai detto.
+
+Lui si irritava. Lei si arrabbiava con sé stessa.
+Stessa ferita, troppo orgoglio per chiedere aiuto.
+Lei cercava pace. Lui aveva bisogno di tempo.
+E continuavano a confondere l'amore con qualcosa a cui dover sopravvivere.
+
+Lei chiedeva spazio.
+Lui cercava di crescere.
+Due strade diverse, una speranza impossibile.
+Lei affrontava le sue ombre.
+Lui affrontava la sua mente.
+Non si sono salvati a vicenda,
+Questa volta hanno scelto di salvarsi da soli.
+
+Lui ha rotto i vecchi schemi. Lei ha lasciato andare il passato.
+Hanno imparato a stare in piedi senza paura dei loro bisogni.
+Lei ha detto ciò che sentiva. Lui non è scappato.
+Lei si è avvicinata. Lui non ha rincorso.
+Si sono ritrovati, ma senza lo stesso peso, senza lo stesso dolore.
+
+Lei non è fuggita. Lui non è crollato.
+Nessun grande ritorno, niente miracoli.
+Solo due persone che finalmente sanno quanto valgono davvero.
+
+Lei chiedeva spazio.
+Lui cercava di crescere.
+Due strade diverse, una speranza impossibile.
+Lei affrontava le sue ombre.
+Lui affrontava la sua mente.
+Non si sono salvati a vicenda,
+Questa volta hanno scelto di salvarsi da soli.
+
+Lei non è fuggita. Lui non è crollato.
+Era qualcosa di nuovo.
+Ed era abbastanza.
+
+Non si sono innamorati di nuovo.
+Hanno finalmente costruito qualcosa con consapevolezza.`,
+  4: `Tu spingi, io tiro, giriamo come fuoco vivo,
+Due cuori testardi in equilibrio sopra un filo.
+Vuoi avere il controllo ma cerchi il mio tocco,
+Voglio che ti lasci andare… ma solo se lo vuoi anche tu.
+
+Ti avvicini piano, occhi affilati come lame,
+Ogni sguardo che lanci dice che non hai paura.
+Le dita sul colletto mi tirano verso di te,
+Mi sfidi a restare lì, faccia a faccia, respiro contro respiro.
+Sussurri che non cedi facilmente, neanch'io,
+Ma entrambi sentiamo la tensione salire ogni volta che ci proviamo.
+
+Mi afferri il polso come per trascinarmi dentro,
+Mi fermo sui tuoi fianchi, sento il calore sotto la tua pelle.
+Vuoi guidare il gioco ma cedi quando ti sfioro,
+Il tuo corpo parla chiaro… più della tua voce.
+
+Lasciati andare a me come io mi do a te,
+Non posseduta, non in catene, solo selvaggia e libera.
+Lascia che questo tirare e spingere ci porti dove fa male a entrambi,
+Due cuori forti che imparano a piegarsi, senza spezzarsi.
+Se vuoi il potere, prenditela comoda, prendila sul serio,
+Lascia che il ritmo ci trascini giù… finché non resta più niente da dire.
+
+Mi spingi contro il muro, le tue labbra sfiorano il mio collo,
+Una minaccia dolce nascosta in un messaggio famelico.
+Scendo con le mani e perdi un attimo il respiro,
+La voce ti tradisce, ma fai finta di niente.
+Dici che vuoi vincere, ma il tuo corpo racconta altro,
+Ti avvicini dopo ogni mio tocco come se mi pregassi di scegliere.
+
+Provi a guidare ma cambio passo e prendo il controllo,
+Il tuo respiro si spezza quando tocco la tua anima.
+Mi segui, combaci con ogni mio movimento,
+Una tempesta perfetta che ci trascina dentro.
+
+Lasciati andare a me come io mi do a te,
+Non posseduta, non in catene, solo selvaggia e libera.
+Lascia che questo tirare e spingere ci porti dove fa male a entrambi,
+Due cuori forti che imparano a piegarsi, senza spezzarsi.
+Se vuoi il potere, prenditela comoda, prendila sul serio,
+Lascia che il ritmo ci trascini giù… finché non resta più niente da dire.
+
+Le tue unghie sulla mia schiena lasciano segni voluti,
+Sussurri resa… e si mescola alla mia.
+Lottiamo per il controllo ma ci sciogliamo allo stesso modo,
+Due anime testarde che perdono il senso del gioco.
+Non voglio possederti — non è questo il punto,
+Voglio che sia tu a volerti innamorare di me.
+
+Lasciati andare a me come io mi do a te,
+Lascia che la tensione esploda e ci liberi entrambi.
+Ogni bacio, ogni respiro, ogni tremore nella tua voce,
+Sembriamo due forze che finalmente fanno un'unica scelta.
+Niente corone, niente troni, solo la verità che entrambi sentiamo,
+Tu ti dai a me… e io do me stesso davvero.
+
+Un demone di fuoco che incontra la sua fiamma,
+Un fuoco sacro che trova il suo posto benedetto.
+So che quando accadrà non vorrò più andare via,
+È da sempre che aspetto una pace come la tua.`,
 };
 
 const EQ_BAR_COUNT = 7;
@@ -1289,7 +1988,7 @@ function ensureAudioRunning() { return Promise.resolve(); }
 
 // ── EQ bar state (one entry per song), populated into the in-page #eq${n} divs ──
 const eqState = {};
-[1, 2, 3].forEach(n => {
+SONG_INDEXES.forEach(n => {
   const host = document.getElementById(`eq${n}`);
   const bars = [];
   for (let i = 0; i < EQ_BAR_COUNT; i++) {
@@ -1305,7 +2004,7 @@ const eqState = {};
 
 // ── EQ rendering loop (single global rAF, sine-wave fallback) ──
 function eqTick(ts) {
-  for (let n = 1; n <= 3; n++) {
+  for (const n of SONG_INDEXES) {
     const state = eqState[n];
     if (!state) continue;
     const audio = audios[n];
@@ -1324,9 +2023,13 @@ requestAnimationFrame(eqTick);
 
 // ════ LYRICS VIEW OVERLAY ════
 let lyricsViewSong = null;
+let lyricsLang = 'en'; // 'en' | 'it' — resets to 'en' on each open
+const LYRICS_SWAP_MS = 320; // matches .lv-body transition
+let lvSwapTimer = null;
 const lvEl     = document.getElementById('lyrics-view');
 const lvTitle  = document.getElementById('lvTitle');
 const lvBody   = document.getElementById('lvBody');
+const lvLang   = document.getElementById('lvLang');
 const lvPlayBtn= document.getElementById('lvPlayBtn');
 const lvBar    = document.getElementById('lvBar');
 const lvFill   = document.getElementById('lvFill');
@@ -1334,14 +2037,23 @@ const lvHandle = document.getElementById('lvHandle');
 const lvCur    = document.getElementById('lvCur');
 const lvDur    = document.getElementById('lvDur');
 
+function lyricsTextFor(n, lang) {
+  return (lang === 'it' ? LYRICS_IT_TEXT[n] : LYRICS_TEXT[n]) || '';
+}
+
 function openLyricsView(n) {
   lyricsViewSong = n;
+  lyricsLang = 'en';
+  if (lvSwapTimer) { clearTimeout(lvSwapTimer); lvSwapTimer = null; }
+  lvBody.classList.remove('swapping');
   lvTitle.textContent = TRACK_TITLES[n] || '—';
-  lvBody.textContent  = LYRICS_TEXT[n]  || '';
+  lvBody.textContent  = lyricsTextFor(n, lyricsLang);
+  lvLang.textContent  = 'IT'; // shows the OTHER language as the action label
   lvBody.scrollTop = 0;
   lvEl.classList.add('open');
   lvEl.setAttribute('aria-hidden', 'false');
   setCatVisible(false);
+  setHellCatVisible(false);
   // Reflect current audio state on the mini-player
   const a = audios[n];
   lvPlayBtn.classList.toggle('playing', !a.paused);
@@ -1352,7 +2064,25 @@ function closeLyricsView() {
   lvEl.classList.remove('open');
   lvEl.setAttribute('aria-hidden', 'true');
   lyricsViewSong = null;
-  setCatVisible(true);
+  // Restore the right cat — regular elsewhere, hell cat on song 4
+  setCatVisible(currentPage !== 5);
+  setHellCatVisible(currentPage === 5);
+}
+
+function toggleLyricsLang() {
+  if (lyricsViewSong === null) return;
+  if (lvSwapTimer) return; // ignore while a swap is mid-flight
+  lyricsLang = (lyricsLang === 'en') ? 'it' : 'en';
+  lvLang.textContent = (lyricsLang === 'en') ? 'IT' : 'EN';
+  lvBody.classList.add('swapping');
+  lvSwapTimer = setTimeout(() => {
+    lvBody.textContent = lyricsTextFor(lyricsViewSong, lyricsLang);
+    lvBody.scrollTop = 0;
+    // Force reflow so the next removal animates back from the swapping state
+    void lvBody.offsetWidth;
+    lvBody.classList.remove('swapping');
+    lvSwapTimer = null;
+  }, LYRICS_SWAP_MS);
 }
 
 function syncLyricsViewPlayer() {
